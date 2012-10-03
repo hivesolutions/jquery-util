@@ -71,31 +71,19 @@
          * Registers the event handlers for the created objects.
          */
         var _registerHandlers = function() {
-            // retrieves the url from the options
+            // retrieves the various options that were provided
+            // to configure the current matched object
             var url = options["url"];
-
-            // retrieves the timeout from the options
             var timeout = options["timeout"];
-
-            // retrieves the poll timeout from the options
             var pollTimeout = options["pollTimeout"];
-
-            // retrieves the data callback functions from the options
             var dataCallbackFunctions = options["dataCallbackFunctions"];
 
-            // sets the status data
+            // updates the matched object with the options that
+            // were provided in the initializer
             matchedObject.data("status", DISCONNECTED_STATUS);
-
-            // sets the matched object url data
             matchedObject.data("url", url);
-
-            // sets the matched object timeout data
             matchedObject.data("timeout", timeout);
-
-            // sets the matched object poll timeout data
             matchedObject.data("poll_timeout", pollTimeout);
-
-            // sets the matched object data callback functions data
             matchedObject.data("data_callback_functions", dataCallbackFunctions);
 
             // updates the connect
@@ -103,10 +91,9 @@
         };
 
         var __update = function(matchedObject, options) {
-            // retrieves the url data
+            // retrieves the url data and the current connection
+            // identifier to be used in the remote call
             var url = matchedObject.data("url");
-
-            // retrieves the connection data
             var connectionId = matchedObject.data("id");
 
             jQuery.ajax({
@@ -168,10 +155,9 @@
 
             // in case there was success
             if (resultMessage == "success") {
-                // retrieves the connection id
+                // retrieves the connection id and updates the matched
+                // object data with the id
                 var connectionId = jsonData["id"];
-
-                // sets the connection id in the matched object
                 matchedObject.data("id", connectionId);
 
                 // calls the initial update request
