@@ -141,9 +141,8 @@
             // in case no valid data is received
             if (!data) {
                 // runs the on update error (problem in connection)
+                // and returns immediately
                 __onConnectError(matchedObject, options, data);
-
-                // returns immediately
                 return;
             }
 
@@ -186,13 +185,10 @@
         };
 
         var __onUpdateComplete = function(matchedObject, options, request, textStatus) {
-            // retrieves the status data
+            // retrieves a series of configuration options from
+            // the matched object to be used in the handling
             var status = matchedObject.data("status");
-
-            // retrieves the timeout data
             var timeout = matchedObject.data("timeout");
-
-            // retrieves the poll timeout data
             var poolTimeout = matchedObject.data("poll_timeout");
 
             // in case the status is disconnected
