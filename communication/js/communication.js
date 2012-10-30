@@ -74,6 +74,7 @@
             // retrieves the various options that were provided
             // to configure the current matched object
             var url = options["url"];
+            var channels = options["channels"];
             var timeout = options["timeout"];
             var pollTimeout = options["pollTimeout"];
             var dataCallbackFunctions = options["dataCallbackFunctions"];
@@ -82,6 +83,7 @@
             // were provided in the initializer
             matchedObject.data("status", DISCONNECTED_STATUS);
             matchedObject.data("url", url);
+            matchedObject.data("channels", channels);
             matchedObject.data("timeout", timeout);
             matchedObject.data("poll_timeout", pollTimeout);
             matchedObject.data("data_callback_functions", dataCallbackFunctions);
@@ -118,14 +120,22 @@
         };
 
         var __updateConnect = function(matchedObject, options) {
-            // retrieves the url data
+            // retrieves the url data and the sequence containing
+            // the various channels for which the connection is
+            // going to be registered
             var url = matchedObject.data("url");
+            var channels = matchedObject.data("channels");
+
+            // creates the channels string by joining the various
+            // channel names using the comma separator
+            var channelsS = channels.join(",")
 
             jQuery.ajax({
                         type : "post",
                         url : url,
                         data : {
-                            command : "connect"
+                            command : "connect",
+                            channels : channelsS
                         },
                         success : function(data) {
                             __onConnectSuccess(matchedObject, options, data);
@@ -146,10 +156,9 @@
                 return;
             }
 
-            // parses the data generating the json data
-            var jsonData = jQuery.parseJSON(data);
-
+            // parses the data generating the json data and
             // retrieves the result message
+            var jsonData = jQuery.parseJSON(data);
             var resultMessage = jsonData["result"];
 
             // in case there was success
