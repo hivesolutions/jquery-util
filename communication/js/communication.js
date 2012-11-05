@@ -25,16 +25,20 @@
 
 (function(jQuery) {
     jQuery.fn.communication = function(method, options) {
-        // the connected status
+        // the connected status string to be used for
+        // refrence in a series of operations
         var CONNECTED_STATUS = "connected";
 
-        // the disconnected status
+        // the disconnected status string to be used for
+        // refrence in a series of operations
         var DISCONNECTED_STATUS = "disconnected";
 
-        // the error status
+        // the error status string to be used for
+        // refrence in a series of operations
         var ERROR_STATUS = "error";
 
-        // the default values for the menu
+        // the default values for the communication
+        // extension to be used
         var defaults = {
             timeout : 1000,
             pollTimeout : 50
@@ -98,6 +102,8 @@
             var url = matchedObject.data("url");
             var connectionId = matchedObject.data("id");
 
+            // runs the remote call to the server side to provide
+            // the update operation expected behavior
             jQuery.ajax({
                         type : "post",
                         url : url,
@@ -130,6 +136,8 @@
             // channel names using the comma separator
             var channelsS = channels.join(",")
 
+            // runs the remote call to the server side to provide
+            // the connect operation expected behavior
             jQuery.ajax({
                         type : "post",
                         url : url,
