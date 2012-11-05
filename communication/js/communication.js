@@ -319,24 +319,28 @@
                 return;
             }
 
-            // switches over the status
+            // switches over the status of the connection to handle
+            // the change correctly
             switch (status) {
                 case CONNECTED_STATUS :
-                    // triggers the communication connected event
-                    matchedObject.trigger("communication_connected", parameters);
+                    // triggers the stream connected event to notify
+                    // the client about the new connection
+                    matchedObject.triggerHandler("stream_connected", parameters);
 
                     // breaks the switch
                     break;
                 case DISCONNECTED_STATUS :
-                    // triggers the communication disconnected event
-                    matchedObject.trigger("communication_disconnected",
+                    // triggers the stream disconnected event to notify
+                    // the client about the closing of the connection
+                    matchedObject.triggerHandler("stream_disconnected",
                             parameters);
 
                     // breaks the switch
                     break;
                 case ERROR_STATUS :
-                    // triggers the communication error event
-                    matchedObject.trigger("communication_error", parameters);
+                    // triggers the stream error event to notify
+                    // the client about error in the connection infra-structure
+                    matchedObject.triggerHandler("stream_error", parameters);
 
                     // breaks the switch
                     break;
