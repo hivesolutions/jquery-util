@@ -200,7 +200,7 @@
                             // calls the initial update request and updates
                             // the status of the current connection to connected
                             _update(matchedObject, options);
-                            __status(matchedObject, CONNECTED_STATUS);
+                            _status(matchedObject, CONNECTED_STATUS);
                         },
                         error : function(data) {
                             // retrieves the timeout data
@@ -216,7 +216,7 @@
                             // object and updates the current status value
                             matchedObject.data("timeout_handler",
                                     timeoutHandler);
-                            __status(matchedObject, DISCONNECTED_STATUS);
+                            _status(matchedObject, DISCONNECTED_STATUS);
                         }
                     });
         };
@@ -239,12 +239,12 @@
                         success : function(data) {
                             // updates the current connection status to disconnected
                             // because the operation did complete with success
-                            __status(matchedObject, DISCONNECTED_STATUS);
+                            _status(matchedObject, DISCONNECTED_STATUS);
                         },
                         error : function(data) {
                             // there must have been a serious low level error in the
                             // current connection so the error status is set in it
-                            __status(matchedObject, ERROR_STATUS);
+                            _status(matchedObject, ERROR_STATUS);
                         }
                     });
         };
@@ -322,62 +322,64 @@
             // runs the remote call to the server side to provide
             // the update operation expected behavior
             matchedObject.message({
-                type : "post",
-                url : url,
-                data : {
-                    id : connectionId,
-                    command : "update"
-                },
-                complete : function() {
-                    // retrieves a series of configuration options from
-                    // the matched object to be used in the handling
-                    var status = matchedObject.data("status");
-                    var timeout = matchedObject.data("timeout");
+                        type : "post",
+                        url : url,
+                        data : {
+                            id : connectionId,
+                            command : "update"
+                        },
+                        complete : function() {
+                            // retrieves a series of configuration options from
+                            // the matched object to be used in the handling
+                            var status = matchedObject.data("status");
+                            var timeout = matchedObject.data("timeout");
 
-                    // retrieves the proper schedule method to be executed
-                    // according to the current status, in case the connection
-                    // is currently disconnected tries to connect it again
-                    // otherwise runs the "normal" update command to obtain new
-                    // data fro the service source
-                    var method = status == DISCONNECTED_STATUS
-                            ? _connect
-                            : _update;
+                            // retrieves the proper schedule method to be executed
+                            // according to the current status, in case the connection
+                            // is currently disconnected tries to connect it again
+                            // otherwise runs the "normal" update command to obtain new
+                            // data fro the service source
+                            var method = status == DISCONNECTED_STATUS
+                                    ? _connect
+                                    : _update;
 
-                    // sets the timeout for connection, and
-                    // retrieves the timeout handler
-                    var timeoutHandler = setTimeout(function() {
-                                method(matchedObject, options);
-                            }, timeout);
+                            // sets the timeout for connection, and
+                            // retrieves the timeout handler
+                            var timeoutHandler = setTimeout(function() {
+                                        method(matchedObject, options);
+                                    }, timeout);
 
-                    // sets the timeout handler in the matched object
-                    // so that it may be retrieved (and used) latter
-                    matchedObject.data("timeout_handler", timeoutHandler);
-                },
-                success : function(data) {
-                    // retrieves the result message
-                    var _data = data["data"];
-                    var dataElement = jQuery(_data);
+                            // sets the timeout handler in the matched object
+                            // so that it may be retrieved (and used) latter
+                            matchedObject.data("timeout_handler",
+                                    timeoutHandler);
+                        },
+                        success : function(data) {
+                            // retrieves the result message
+                            var _data = data["data"];
+                            var dataElement = jQuery(_data);
 
-                    // iterates over each of the data elements received
-                    // and for each of them calls the appropriate callbacks
-                    dataElement.each(function(index, element) {
-                                __callCallbacks(matchedObject, options, element);
-                            });
+                            // iterates over each of the data elements received
+                            // and for each of them calls the appropriate callbacks
+                            dataElement.each(function(index, element) {
+                                        _callbacks(matchedObject, options,
+                                                element);
+                                    });
 
-                    // updates the current status to connected, an update
-                    // was successfull so the connection is consired
-                    // to be online
-                    __status(matchedObject, CONNECTED_STATUS);
-                },
-                error : function(data) {
-                    // updates the current connection status to disconnected
-                    // as there was an error in the update operation
-                    __status(matchedObject, DISCONNECTED_STATUS);
-                }
-            });
+                            // updates the current status to connected, an update
+                            // was successfull so the connection is consired
+                            // to be online
+                            _status(matchedObject, CONNECTED_STATUS);
+                        },
+                        error : function(data) {
+                            // updates the current connection status to disconnected
+                            // as there was an error in the update operation
+                            _status(matchedObject, DISCONNECTED_STATUS);
+                        }
+                    });
         };
 
-        var __callCallbacks = function(matchedObject, options, data) {
+        var _callbacks = function(matchedObject, options, data) {
             // retrieves the various callbacks registered for data
             // handling in the current matched object
             var callbacks = matchedObject.data("callbacks");
@@ -394,7 +396,7 @@
                     });
         };
 
-        var __status = function(matchedObject, status, parameters) {
+        var _status = function(matchedObject, status, parameters) {
             // retrieves the status data
             var currentStatus = matchedObject.data("status");
 
