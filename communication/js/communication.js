@@ -24,6 +24,80 @@
 // __license__   = GNU General Public License (GPL), Version 3
 
 (function(jQuery) {
+    jQuery.fn.message = function(options) {
+        // creates the default callback function to be used when
+        // no callback is provided, this is an empty callback
+        var callback = function() {
+        };
+
+        // defaults the various callback methods so that they may
+        // be called safely without any runtime error in case their
+        // not defined
+        options.complete = options.complete || callback;
+        options.success = options.success || callback;
+        options.error = options.error || callback;
+
+        // runs the remote call to the server side to provide
+        // the correct abstraction for the message process
+        jQuery.ajax({
+                    type : options.type || "get",
+                    url : options.url,
+                    data : options.data || {},
+                    complete : function(request, textStatus) {
+                        options.complete();
+                    },
+                    success : function(data) {
+                        try {
+                            // in case no valid data is received notifies the client
+                            // about the error and returns the control immediately
+                            if (!data) {
+                                throw "Empty message received";
+                            }
+
+                            try {
+                                // tries to parse the received data as json information
+                                // in case it fails raises a message indicating that the
+                                // unpacking operation did not succeed
+                                var jsonData = jQuery.parseJSON(data);
+                            } catch (exception) {
+                                throw "No valid json data received";
+                            }
+
+                            // retrieves the result string value from the json data
+                            // and notifies the success handler in case the result
+                            // was success
+                            var result = jsonData["result"];
+                            if (result == "success") {
+                                options.success(jsonData);
+                            }
+                            // in case the result value from the message is not succes
+                            // notifies the rror handler of the received data
+                            else {
+                                options.error(jsonData);
+                            }
+                        } catch (message) {
+                            options.error({
+                                        result : "error",
+                                        message : message
+                                    });
+                            return;
+                        }
+                    },
+                    error : function(request, textStatus, errorThrown) {
+                        try {
+                            var jsonData = textStatus
+                                    ? jQuery.parseJSON(textStatus)
+                                    : {};
+                        } catch (exception) {
+                            var jsonData = {};
+                        }
+                        options.error(jsonData);
+                    }
+                });
+    };
+})(jQuery);
+
+(function(jQuery) {
     jQuery.fn.communication = function(method, options) {
         // the connected status string to be used for
         // refrence in a series of operations
@@ -81,7 +155,7 @@
             var channels = options["channels"];
             var timeout = options["timeout"];
             var pollTimeout = options["pollTimeout"];
-            var dataCallbackFunctions = options["dataCallbackFunctions"];
+            var callbacks = options["callbacks"];
 
             // updates the matched object with the options that
             // were provided in the initializer
@@ -90,42 +164,14 @@
             matchedObject.data("channels", channels);
             matchedObject.data("timeout", timeout);
             matchedObject.data("poll_timeout", pollTimeout);
-            matchedObject.data("data_callback_functions", dataCallbackFunctions);
+            matchedObject.data("callbacks", callbacks);
 
-            // updates the connect
-            __updateConnect(matchedObject, options);
+            // starts the connect command, this should be ran
+            // at the end of the handlers registration
+            __connect(matchedObject, options);
         };
 
-        var __update = function(matchedObject, options) {
-            // retrieves the url data and the current connection
-            // identifier to be used in the remote call
-            var url = matchedObject.data("url");
-            var connectionId = matchedObject.data("id");
-
-            // runs the remote call to the server side to provide
-            // the update operation expected behavior
-            jQuery.ajax({
-                        type : "post",
-                        url : url,
-                        data : {
-                            id : connectionId,
-                            command : "update"
-                        },
-                        complete : function(request, textStatus) {
-                            __onUpdateComplete(matchedObject, options, request,
-                                    textStatus);
-                        },
-                        success : function(data) {
-                            __onUpdateSuccess(matchedObject, options, data);
-                        },
-                        error : function(request, textStatus, errorThrown) {
-                            __onUpdateError(matchedObject, options, request,
-                                    textStatus, errorThrown);
-                        }
-                    });
-        };
-
-        var __updateConnect = function(matchedObject, options) {
+        var __connect = function(matchedObject, options) {
             // retrieves the url data and the sequence containing
             // the various channels for which the connection is
             // going to be registered
@@ -138,7 +184,7 @@
 
             // runs the remote call to the server side to provide
             // the connect operation expected behavior
-            jQuery.ajax({
+            matchedObject.message({
                         type : "post",
                         url : url,
                         data : {
@@ -146,169 +192,209 @@
                             channels : channelsS
                         },
                         success : function(data) {
-                            __onConnectSuccess(matchedObject, options, data);
+                            // retrieves the connection id and updates the matched
+                            // object data with the id (for latter usage)
+                            var connectionId = data["id"];
+                            matchedObject.data("id", connectionId);
+
+                            // calls the initial update request and updates
+                            // the status of the current connection to connected
+                            __update(matchedObject, options);
+                            __status(matchedObject, CONNECTED_STATUS);
                         },
-                        error : function(request, textStatus, errorThrown) {
-                            __onConnectError(matchedObject, options, request,
-                                    textStatus, errorThrown);
+                        error : function(data) {
+                            // retrieves the timeout data
+                            var timeout = matchedObject.data("timeout");
+
+                            // sets the timeout for connection, and
+                            // retrieves the timeout handler
+                            var timeoutHandler = setTimeout(function() {
+                                        __connect(matchedObject, options);
+                                    }, timeout);
+
+                            // sets the timeout handler in the current matached
+                            // object and updates the current status value
+                            matchedObject.data("timeout_handler",
+                                    timeoutHandler);
+                            __status(matchedObject, DISCONNECTED_STATUS);
                         }
                     });
         };
 
-        var __onConnectSuccess = function(matchedObject, options, data) {
-            // in case no valid data is received
-            if (!data) {
-                // runs the on update error (problem in connection)
-                // and returns immediately
-                __onConnectError(matchedObject, options, data);
-                return;
-            }
+        var _disconnect = function(matchedObject, options) {
+            // retrieves the url data and the current connection
+            // identifier to be used in the remote call
+            var url = matchedObject.data("url");
+            var connectionId = matchedObject.data("id");
 
-            // parses the data generating the json data and
-            // retrieves the result message
-            var jsonData = jQuery.parseJSON(data);
-            var resultMessage = jsonData["result"];
-
-            // in case there was success
-            if (resultMessage == "success") {
-                // retrieves the connection id and updates the matched
-                // object data with the id
-                var connectionId = jsonData["id"];
-                matchedObject.data("id", connectionId);
-
-                // calls the initial update request
-                __update(matchedObject, options);
-            }
-
-            // updates the current status to connected
-            __updateStatus(matchedObject, CONNECTED_STATUS, []);
-        };
-
-        var __onConnectError = function(matchedObject, options, request, textStatus, errorThrown) {
-            // retrieves the timeout data
-            var timeout = matchedObject.data("timeout");
-
-            // sets the timeout for connection, and
-            // retrieves the timeout handler
-            var timeoutHandler = setTimeout(function() {
-                        __updateConnect(matchedObject, options);
-                    }, timeout);
-
-            // sets the matched object timeout handler
-            matchedObject.data("timeoutHandler", timeoutHandler);
-
-            // updates the current status to disconnected
-            __updateStatus(matchedObject, DISCONNECTED_STATUS, []);
-        };
-
-        var __onUpdateComplete = function(matchedObject, options, request, textStatus) {
-            // retrieves a series of configuration options from
-            // the matched object to be used in the handling
-            var status = matchedObject.data("status");
-            var timeout = matchedObject.data("timeout");
-            var poolTimeout = matchedObject.data("poll_timeout");
-
-            // in case the status is disconnected
-            // tries to re-connect
-            if (status == DISCONNECTED_STATUS) {
-                // sets the timeout for connection, and
-                // retrieves the timeout handler
-                var timeoutHandler = setTimeout(function() {
-                            __updateConnect(matchedObject, options);
-                        }, timeout);
-
-                // sets the matched object timeout handler
-                matchedObject.data("timeoutHandler", timeoutHandler);
-            }
-            // otherwise it's a normal request
-            else {
-                // sets the (poll) timeout for contents retrieval, and
-                // retrieves the timeout handler
-                var timeoutHandler = setTimeout(function() {
-                            __update(matchedObject, options);
-                        }, poolTimeout);
-
-                // sets the matched object timeout handler
-                matchedObject.data("timeoutHandler", timeoutHandler);
-            }
-        };
-
-        var __onUpdateSuccess = function(matchedObject, options, data) {
-            // in case no valid data is received
-            if (!data) {
-                // runs the on update error (problem in connection)
-                __onUpdateError(matchedObject, options, data);
-
-                // returns immediately
-                return;
-            }
-
-            try {
-                // parses the data generating the json data
-                var jsonData = jQuery.parseJSON(data);
-            } catch (exception) {
-                // sets the default json data
-                var jsonData = {};
-            }
-
-            // retrieves the result message
-            var resultMessage = jsonData["result"];
-
-            // retrieves the result message element
-            var resultMessageElement = jQuery(resultMessage);
-
-            // iterates over each of the result message elements
-            // to call the call data callbacks
-            resultMessageElement.each(function(index, element) {
-                        // calls the data callbacks
-                        __callDataCallbacks(matchedObject, options, element);
+            // runs the remote call to the server side to provide
+            // the disconnect operation
+            matchedObject.message({
+                        type : "post",
+                        url : url,
+                        data : {
+                            id : connectionId,
+                            command : "disconnect"
+                        },
+                        success : function(data) {
+                            // updates the current connection status to disconnected
+                            // because the operation did complete with success
+                            __status(matchedObject, DISCONNECTED_STATUS);
+                        },
+                        error : function(data) {
+                            // there must have been a serious low level error in the
+                            // current connection so the error status is set in it
+                            __status(matchedObject, ERROR_STATUS);
+                        }
                     });
-
-            // updates the current status to connected
-            __updateStatus(matchedObject, CONNECTED_STATUS, []);
         };
 
-        var __onUpdateError = function(matchedObject, options, request, textStatus, errorThrown) {
-            try {
-                // parses the text status generating the json data
-                var jsonData = textStatus ? jQuery.parseJSON(textStatus) : {};
-            } catch (exception) {
-                // sets the default json data
-                var jsonData = {};
-            }
+        var _data = function(matchedObject, options) {
+            // retrieves the data to be send to the other
+            // side of the communication (server side)
+            var data = options["data"];
 
-            // retrieves the result message
-            var resultMessage = jsonData["result"];
+            // retrieves the url data and the current connection
+            // identifier to be used in the remote call
+            var url = matchedObject.data("url");
+            var connectionId = matchedObject.data("id");
 
-            // in case the result message is available
-            if (resultMessage) {
-                // updates the current status to error
-                __updateStatus(matchedObject, ERROR_STATUS, []);
-            }
-            // otherwise it's an unknown error, assumes disconnection
-            else {
-                // updates the current status to disconnected
-                __updateStatus(matchedObject, DISCONNECTED_STATUS, []);
-            }
+            // runs the remote call to the server side to provide
+            // the disconnect operation
+            matchedObject.message({
+                        type : "post",
+                        url : url,
+                        data : {
+                            id : connectionId,
+                            command : "data",
+                            data : data
+                        },
+                        complete : function() {
+                            options.complete && options.complete();
+                        },
+                        success : function(data) {
+                            options.success && options.complete(data);
+                        },
+                        error : function(data) {
+                            options.error && options.error(data);
+                        }
+                    });
         };
 
-        var __callDataCallbacks = function(matchedObject, options, data) {
-            // retrieves the data callback functions data
-            var dataCallbackFunctions = matchedObject.data("data_callback_functions");
+        var _channel = function(matchedObject, options) {
+            // retrieves the channel (name) that is going to be used
+            // in the channel registration command
+            var channel = options["channel"];
 
-            // sets the default data callback functions
-            dataCallbackFunctions = dataCallbackFunctions
-                    ? dataCallbackFunctions
-                    : [];
+            // retrieves the url data and the current connection
+            // identifier to be used in the remote call
+            var url = matchedObject.data("url");
+            var connectionId = matchedObject.data("id");
 
-            // iterates over all the data callback functions
-            jQuery(dataCallbackFunctions).each(function(index, element) {
+            // runs the remote call to the server side to provide
+            // the disconnect operation
+            matchedObject.message({
+                        type : "post",
+                        url : url,
+                        data : {
+                            id : connectionId,
+                            command : "channel",
+                            channel : channel
+                        },
+                        complete : function() {
+                            options.complete && options.complete(channel);
+                        },
+                        success : function(data) {
+                            options.success && options.success(channel);
+                        },
+                        error : function(data) {
+                            options.error && options.error(channel);
+                        }
+                    });
+        };
+
+        var __update = function(matchedObject, options) {
+            // retrieves the url data and the current connection
+            // identifier to be used in the remote call
+            var url = matchedObject.data("url");
+            var connectionId = matchedObject.data("id");
+
+            // runs the remote call to the server side to provide
+            // the update operation expected behavior
+            matchedObject.message({
+                type : "post",
+                url : url,
+                data : {
+                    id : connectionId,
+                    command : "update"
+                },
+                complete : function() {
+                    // retrieves a series of configuration options from
+                    // the matched object to be used in the handling
+                    var status = matchedObject.data("status");
+                    var timeout = matchedObject.data("timeout");
+
+                    // retrieves the proper schedule method to be executed
+                    // according to the current status, in case the connection
+                    // is currently disconnected tries to connect it again
+                    // otherwise runs the "normal" update command to obtain new
+                    // data fro the service source
+                    var method = status == DISCONNECTED_STATUS
+                            ? __connect
+                            : __update;
+
+                    // sets the timeout for connection, and
+                    // retrieves the timeout handler
+                    var timeoutHandler = setTimeout(function() {
+                                method(matchedObject, options);
+                            }, timeout);
+
+                    // sets the timeout handler in the matched object
+                    // so that it may be retrieved (and used) latter
+                    matchedObject.data("timeout_handler", timeoutHandler);
+                },
+                success : function(data) {
+                    // retrieves the result message
+                    var _data = data["data"];
+                    var dataElement = jQuery(_data);
+
+                    // iterates over each of the data elements received
+                    // and for each of them calls the appropriate callbacks
+                    dataElement.each(function(index, element) {
+                                __callCallbacks(matchedObject, options, element);
+                            });
+
+                    // updates the current status to connected, an update
+                    // was successfull so the connection is consired
+                    // to be online
+                    __status(matchedObject, CONNECTED_STATUS);
+                },
+                error : function(data) {
+                    // updates the current connection status to disconnected
+                    // as there was an error in the update operation
+                    __status(matchedObject, DISCONNECTED_STATUS);
+                }
+            });
+        };
+
+        var __callCallbacks = function(matchedObject, options, data) {
+            // retrieves the various callbacks registered for data
+            // handling in the current matched object
+            var callbacks = matchedObject.data("callbacks");
+
+            // sets the default data callback functions, defaulting
+            // to an empty list in case their not provided
+            callbacks = callbacks ? callbacks : [];
+
+            // iterates over all the data callback functions and calls
+            // each of them with the received data
+            jQuery(callbacks).each(function(index, element) {
                         // calls the callback function
                         element(data);
                     });
         };
 
-        var __updateStatus = function(matchedObject, status, parameters) {
+        var __status = function(matchedObject, status, parameters) {
             // retrieves the status data
             var currentStatus = matchedObject.data("status");
 
@@ -358,6 +444,10 @@
 
             case "data" :
                 _data(matchedObject, options);
+                break;
+
+            case "channel" :
+                _channel(matchedObject, options);
                 break;
 
             case "default" :
