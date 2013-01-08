@@ -46,78 +46,76 @@
         // runs the remote call to the server side to provide
         // the correct abstraction for the message process
         jQuery.ajax({
-                    type : options.type || "get",
-                    url : options.url,
-                    data : options.data || {},
-                    complete : function(request, textStatus) {
-                        options.complete();
-                    },
-                    success : function(data) {
-                        try {
-                            // in case no valid data is received notifies the client
-                            // about the error and returns the control immediately
-                            if (!data) {
-                                throw "Empty message received";
-                            }
-
-                            try {
-                                // tries to parse the received data as json information
-                                // in case it fails raises a message indicating that the
-                                // unpacking operation did not succeed
-                                data = typeof data == "object"
-                                        ? data
-                                        : jQuery.parseJSON(data);
-                            } catch (exception) {
-                                throw "No valid json data received";
-                            }
-
-                            // retrieves the result string value from the (json) data
-                            // and notifies the success handler in case the result
-                            // was success
-                            var result = data["result"];
-                            if (result == "success") {
-                                options.success(data);
-                            }
-                            // in case the result value from the message is not succes
-                            // notifies the rror handler of the received data
-                            else {
-                                options.error(data);
-                            }
-                        } catch (message) {
-                            options.error({
-                                        result : "error",
-                                        message : message
-                                    });
-                            return;
-                        }
-                    },
-                    error : function(request, textStatus, errorThrown) {
-                        try {
-                            // tries to parse the text status as json information
-                            // in case it fails or no data is received an empty
-                            // data structure is used instead
-                            var data = textStatus
-                                    ? jQuery.parseJSON(textStatus)
-                                    : {};
-                        } catch (exception) {
-                            var data = {};
-                        }
-
-                        // in case a valid data is going to be used the error is
-                        // considered "complete" and the notification process is immediate
-                        if (data) {
-                            options.error(data);
-                        }
-                        // otherwise creates a timeout for the notification of the error
-                        // handler about the error, this avoids excessive error reporting
-                        // (provides flood controll)
-                        else {
-                            setTimeout(function() {
-                                        options.error(data);
-                                    }, options.delay);
-                        }
+            type : options.type || "get",
+            url : options.url,
+            data : options.data || {},
+            complete : function(request, textStatus) {
+                options.complete();
+            },
+            success : function(data) {
+                try {
+                    // in case no valid data is received notifies the client
+                    // about the error and returns the control immediately
+                    if (!data) {
+                        throw "Empty message received";
                     }
-                });
+
+                    try {
+                        // tries to parse the received data as json information
+                        // in case it fails raises a message indicating that the
+                        // unpacking operation did not succeed
+                        data = typeof data == "object"
+                                ? data
+                                : jQuery.parseJSON(data);
+                    } catch (exception) {
+                        throw "No valid json data received";
+                    }
+
+                    // retrieves the result string value from the (json) data
+                    // and notifies the success handler in case the result
+                    // was success
+                    var result = data["result"];
+                    if (result == "success") {
+                        options.success(data);
+                    }
+                    // in case the result value from the message is not succes
+                    // notifies the rror handler of the received data
+                    else {
+                        options.error(data);
+                    }
+                } catch (message) {
+                    options.error({
+                                result : "error",
+                                message : message
+                            });
+                    return;
+                }
+            },
+            error : function(request, textStatus, errorThrown) {
+                try {
+                    // tries to parse the text status as json information
+                    // in case it fails or no data is received an invalid
+                    // data structure is used instead
+                    var data = textStatus ? jQuery.parseJSON(textStatus) : null;
+                } catch (exception) {
+                    var data = null;
+                }
+
+                // in case a valid data is going to be used the error is
+                // considered "complete" and the notification process is immediate
+                if (data) {
+                    options.error(data);
+                }
+                // otherwise creates a timeout for the notification of the error
+                // handler about the error, this avoids excessive error reporting
+                // (provides flood controll)
+                else {
+                    setTimeout(function() {
+                                options.error({});
+                            }, options.delay);
+                }
+            }
+        });
     };
 })(jQuery);
 
