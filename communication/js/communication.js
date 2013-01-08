@@ -25,6 +25,12 @@
 
 (function(jQuery) {
     jQuery.fn.message = function(options) {
+        // creates the "final" options map by extending the
+        // provided options with the default ones
+        var options = jQuery.extend({
+                    delay : 1000
+                }, options);
+
         // creates the default callback function to be used when
         // no callback is provided, this is an empty callback
         var callback = function() {
@@ -87,13 +93,29 @@
                     },
                     error : function(request, textStatus, errorThrown) {
                         try {
+                            // tries to parse the text status as json information
+                            // in case it fails or no data is received an empty
+                            // data structure is used instead
                             var data = textStatus
                                     ? jQuery.parseJSON(textStatus)
                                     : {};
                         } catch (exception) {
                             var data = {};
                         }
-                        options.error(data);
+
+                        // in case a valid data is going to be used the error is
+                        // considered "complete" and the notification process is immediate
+                        if (data) {
+                            options.error(data);
+                        }
+                        // otherwise creates a timeout for the notification of the error
+                        // handler about the error, this avoids excessive error reporting
+                        // (provides flood controll)
+                        else {
+                            setTimeout(function() {
+                                        options.error(data);
+                                    }, options.delay);
+                        }
                     }
                 });
     };
