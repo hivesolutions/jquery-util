@@ -78,7 +78,6 @@
                                 options.error(data);
                             }
                         } catch (message) {
-                            console.info(message);
                             options.error({
                                         result : "error",
                                         message : message
