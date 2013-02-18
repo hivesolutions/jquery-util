@@ -23,7 +23,7 @@
 // __copyright__ = Copyright (c) 2008-2012 Hive Solutions Lda.
 // __license__   = GNU General Public License (GPL), Version 3
 
-(function($) {
+(function(jQuery) {
     jQuery.fn.parseData = function(options) {
         // the default values for the menu
         var defaults = {};

@@ -23,7 +23,7 @@
 // __copyright__ = Copyright (c) 2008-2012 Hive Solutions Lda.
 // __license__   = GNU General Public License (GPL), Version 3
 
-(function($) {
+(function(jQuery) {
     jQuery.resolveurl = function(url, options) {
         // the default values for the resolve url
         var defaults = {};
@@ -52,7 +52,7 @@
     };
 })(jQuery);
 
-(function($) {
+(function(jQuery) {
     jQuery.environment = function(variableName, defaultValue, options) {
         // the default values for the environment
         var defaults = {
