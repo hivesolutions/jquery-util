@@ -208,6 +208,14 @@
             var url = matchedObject.data("url");
             var channels = matchedObject.data("channels");
 
+            // verifies if the current communication object is valid,
+            // must be present in the current dom, in case it does not
+            // returns immediately (not possible to perform request)
+            var isValid = matchedObject.uxindom();
+            if (!isValid) {
+                return;
+            }
+
             // creates the channels string by joining the various
             // channel names using the comma separator
             var channelsS = channels.join(",")
@@ -348,6 +356,14 @@
             // identifier to be used in the remote call
             var url = matchedObject.data("url");
             var connectionId = matchedObject.data("id");
+
+            // verifies if the current communication object is valid,
+            // must be present in the current dom, in case it does not
+            // returns immediately (not possible to perform request)
+            var isValid = matchedObject.uxindom();
+            if (!isValid) {
+                return;
+            }
 
             // runs the remote call to the server side to provide
             // the update operation expected behavior
