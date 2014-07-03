@@ -211,7 +211,11 @@
             // verifies if the current communication object is valid,
             // must be present in the current dom, in case it does not
             // returns immediately (not possible to perform request)
-            var isValid = matchedObject.uxindom();
+            // note that this validation is conditional on existence
+            // of the uxf library and may create problems
+            var isValid = matchedObject.uxindom
+                    ? matchedObject.uxindom()
+                    : true;
             if (!isValid) {
                 return;
             }
