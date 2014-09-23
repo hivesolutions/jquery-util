@@ -24,7 +24,7 @@
 // __license__   = GNU General Public License (GPL), Version 3
 
 (function(jQuery) {
-    // the types list
+
     var types = ["DOMMouseScroll", "mousewheel"];
 
     jQuery.event.special.mousewheel = {
