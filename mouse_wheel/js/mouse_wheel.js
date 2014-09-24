@@ -68,7 +68,6 @@
         if (event.detail)
             delta = -event.detail / 3;
 
-        // adds events and delta to the front of the arguments
         args.unshift(event, delta);
 
         return jQuery.event.handle.apply(this, args);
