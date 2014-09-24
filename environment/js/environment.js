@@ -74,13 +74,11 @@
         // retrieves the environment element
         var environmentElement = options["environmentElement"];
 
-        // retrieves the (environement) variable value
+        // retrieves the (environement) variable value, sets
+        // the variable value with the default value in case
+        // it's necessary and returns it to the caller function
         var variableValue = jQuery("#" + variableName, environmentElement).html();
-
-        // sets the variable value with the default value in case it's necessary
         var variableValue = variableValue === null ? defaultValue : variableValue;
-
-        // returns the (environement) variable value
         return variableValue;
     };
 })(jQuery);
