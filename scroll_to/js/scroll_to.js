@@ -104,6 +104,12 @@
     };
 
     jQuery.fn.scrollTo = function(target, duration, settings) {
+        // in case the target is not defined or in case it's
+        // an empty array, must return immdiately, nothing to be done
+        if (!target || target.length == 0) {
+            return;
+        }
+
         // in case the duration is an object
         if (typeof duration == "object") {
             settings = duration;
