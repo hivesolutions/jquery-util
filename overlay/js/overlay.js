@@ -61,34 +61,54 @@
          * Registers the event handlers for the created objects.
          */
         var _registerHandlers = function() {
+            matchedObject.bind("toggle", function(event, timeout) {
+                        var element = jQuery(this);
+                        _toggle(element, options, timeout);
+                    });
+
+            matchedObject.bind("show", function(event, timeout) {
+                        var element = jQuery(this);
+                        _show(element, options, timeout);
+                    });
+
+            matchedObject.bind("hide", function(event, timeout) {
+                        var element = jQuery(this);
+                        _hide(element, options, timeout);
+                    });
+
+            matchedObject.bind("resize", function() {
+                        var element = jQuery(this);
+                        _hide(element, options);
+                    });
+
             jQuery(window).resize(function(event) {
                         // resizes the matched object
                         _resize(matchedObject, options);
                     });
         };
 
-        var _toggle = function(matchedObject, options) {
+        var _toggle = function(matchedObject, options, timeout) {
             // in case the matched object is not visible
             if (matchedObject.is(":visible")) {
                 // hides the overlay
-                _hide(matchedObject, options);
+                _hide(matchedObject, options, timeout);
             } else {
                 // shows the overlay
-                _show(matchedObject, options);
+                _show(matchedObject, options, timeout);
             }
         };
 
-        var _show = function(matchedObject, options) {
-            // resizes the matched object
+        var _show = function(matchedObject, options, timeout) {
+            // resizes the matched object and then runs
+            // the show operation for the overlay element
             _resize(matchedObject, options);
-
-            // shows the matched options object
-            matchedObject.fadeIn(250);
+            matchedObject.fadeIn(timeout || 250);
         };
 
-        var _hide = function(matchedObject, options) {
-            // hides the matched object
-            matchedObject.fadeOut(100);
+        var _hide = function(matchedObject, options, timeout) {
+            // hides the matched object, using the default
+            // strategy for such operation (as expected)
+            matchedObject.fadeOut(timeout || 100);
         };
 
         var _resize = function(matchedObject, options) {
