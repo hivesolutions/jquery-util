@@ -99,7 +99,7 @@
         };
 
         var _show = function(matchedObject, options, timeout) {
-            // resizes the matched object and then runs
+            // shows the matched object and then runs
             // the show operation for the overlay element
             _resize(matchedObject, options);
             matchedObject.fadeIn(timeout || 250);
