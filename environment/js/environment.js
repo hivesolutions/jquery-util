@@ -56,7 +56,7 @@
     jQuery.environment = function(variableName, defaultValue, options) {
         // the default values for the environment
         var defaults = {
-            environmentElement : jQuery("#environment-variables")
+            environmentElement: jQuery("#environment-variables")
         };
 
         // sets the default method value

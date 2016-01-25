@@ -28,8 +28,8 @@
 if (jQuery.browser.mozilla || jQuery.browser.opera) {
     document.removeEventListener("DOMContentLoaded", jQuery.ready, false);
     document.addEventListener("DOMContentLoaded", function() {
-                jQuery.ready();
-            }, false);
+        jQuery.ready();
+    }, false);
 }
 
 // removes the load event handler
@@ -37,8 +37,8 @@ jQuery.event.remove(window, "load", jQuery.ready);
 
 // adds a new load event handler
 jQuery.event.add(window, "load", function() {
-            jQuery.ready();
-        });
+    jQuery.ready();
+});
 
 jQuery.extend({
 
@@ -48,7 +48,7 @@ jQuery.extend({
      *
      * @type Map
      */
-    includeStates : {},
+    includeStates: {},
 
     /**
      * Includes the javascript in the given url calling the callback at the end.
@@ -65,7 +65,7 @@ jQuery.extend({
      *            the resource.
      * @return {Function} Function to test the loading of the url.
      */
-    include : function(url, callback, dependency) {
+    include: function(url, callback, dependency) {
         // in case no callback is sent and dependency is defined
         if (typeof callback != "function" && !dependency) {
             // sets the dependency as the callback (second argument)
@@ -130,15 +130,15 @@ jQuery.extend({
 
                 // iterates over all the dependencies
                 jQuery.each(dependency, function(index, element) {
-                            // in the inclusion of the dependency is not successful
-                            if (!element()) {
-                                // sets valid as false
-                                valid = false;
+                    // in the inclusion of the dependency is not successful
+                    if (!element()) {
+                        // sets valid as false
+                        valid = false;
 
-                                // returns false (breaks iteration)
-                                return false;
-                            }
-                        });
+                        // returns false (breaks iteration)
+                        return false;
+                    }
+                });
 
                 // in case the valid flag is set (all dependencies included with success)
                 if (valid) {
@@ -166,12 +166,12 @@ jQuery.extend({
      *
      * @type Function
      */
-    readyOld : jQuery.ready,
+    readyOld: jQuery.ready,
 
     /**
      * New jquery ready function to be called.
      */
-    ready : function() {
+    ready: function() {
         // in case the is ready flag is set
         if (jQuery.isReady) {
             // returns immediately
@@ -184,14 +184,14 @@ jQuery.extend({
         // iterates over all the include states to check
         // if they are all already loaded
         jQuery.each(jQuery.includeStates, function(url, state) {
-                    if (!state) {
-                        // unsests the ready flag (state is invalid) not yet ready
-                        ready = false;
+            if (!state) {
+                // unsests the ready flag (state is invalid) not yet ready
+                ready = false;
 
-                        // returns false (breaks iteration)
-                        return false;
-                    }
-                });
+                // returns false (breaks iteration)
+                return false;
+            }
+        });
 
         // in case all the states are ready
         if (ready) {

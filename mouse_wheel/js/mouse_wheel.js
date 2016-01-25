@@ -28,7 +28,7 @@
     var types = ["DOMMouseScroll", "mousewheel"];
 
     jQuery.event.special.mousewheel = {
-        setup : function() {
+        setup: function() {
             if (this.addEventListener)
                 for (var i = types.length; i;)
                     this.addEventListener(types[--i], handler, false);
@@ -36,7 +36,7 @@
                 this.onmousewheel = handler;
         },
 
-        teardown : function() {
+        teardown: function() {
             if (this.removeEventListener)
                 for (var i = types.length; i;)
                     this.removeEventListener(types[--i], handler, false);
@@ -46,19 +46,19 @@
     };
 
     jQuery.fn.extend({
-                mousewheel : function(fn) {
-                    return fn
-                            ? this.bind("mousewheel", fn)
-                            : this.trigger("mousewheel");
-                },
+        mousewheel: function(fn) {
+            return fn ? this.bind("mousewheel", fn) : this.trigger("mousewheel");
+        },
 
-                unmousewheel : function(fn) {
-                    return this.unbind("mousewheel", fn);
-                }
-            });
+        unmousewheel: function(fn) {
+            return this.unbind("mousewheel", fn);
+        }
+    });
 
     function handler(event) {
-        var args = [].slice.call(arguments, 1), delta = 0, returnValue = true;
+        var args = [].slice.call(arguments, 1),
+            delta = 0,
+            returnValue = true;
 
         event = jQuery.event.fix(event || window.event);
         event.type = "mousewheel";

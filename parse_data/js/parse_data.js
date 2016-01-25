@@ -72,14 +72,13 @@
 
                 // in case the child class does not exists
                 // in the parsed classes
-                if (childClassName
-                        && parsedClasses.indexOf(childClassName) == -1) {
+                if (childClassName && parsedClasses.indexOf(childClassName) == -1) {
                     // adds the child class name to the parsed classes
                     parsedClasses.push(childClassName);
 
                     // retrieves the children for the given class (only data structure)
-                    var childrenClass = matchedObject.children("."
-                            + childClassName + "[data-structure=true]");
+                    var childrenClass = matchedObject.children("." + childClassName +
+                        "[data-structure=true]");
 
                     // retrieves the children class length
                     var childrenClassLength = childrenClass.length;

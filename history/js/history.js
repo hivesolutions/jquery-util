@@ -24,13 +24,12 @@
 // __license__   = GNU General Public License (GPL), Version 3
 
 jQuery.extend({
-    historyCurrentHash : undefined,
-    historyCallback : undefined,
-    historyIframeSrc : undefined,
-    historyNeedIframe : jQuery.browser.msie
-            && (jQuery.browser.version < 8 || document.documentMode < 8),
+    historyCurrentHash: undefined,
+    historyCallback: undefined,
+    historyIframeSrc: undefined,
+    historyNeedIframe: jQuery.browser.msie && (jQuery.browser.version < 8 || document.documentMode < 8),
 
-    historyInit : function(callback, src) {
+    historyInit: function(callback, src) {
         jQuery.historyCallback = callback;
         if (src)
             jQuery.historyIframeSrc = src;
@@ -45,8 +44,8 @@ jQuery.extend({
             }
 
             // adds the hidden iframe for internet explorer
-            jQuery("body").prepend("<iframe id=\"jQuery_history\" style=\"display: none;\""
-                    + " src=\"javascript:false;\"></iframe>");
+            jQuery("body").prepend("<iframe id=\"jQuery_history\" style=\"display: none;\"" +
+                " src=\"javascript:false;\"></iframe>");
             var ihistory = jQuery("#jQuery_history")[0];
             var iframe = ihistory.contentWindow.document;
             iframe.open();
@@ -66,7 +65,7 @@ jQuery.extend({
         setInterval(jQuery.historyCheck, 100);
     },
 
-    historyAddHistory : function(hash) {
+    historyAddHistory: function(hash) {
         // This makes the looping function do something
         jQuery.historyBackStack.push(hash);
 
@@ -74,12 +73,11 @@ jQuery.extend({
         this.isFirst = true;
     },
 
-    historyCheck : function() {
+    historyCheck: function() {
         if (jQuery.historyNeedIframe) {
             // on inte check for location.hash of iframe
             var ihistory = jQuery("#jQuery_history")[0];
-            var iframe = ihistory.contentDocument
-                    || ihistory.contentWindow.document;
+            var iframe = ihistory.contentDocument || ihistory.contentWindow.document;
             var current_hash = iframe.location.hash.replace(/\?.*$/, "");
             if (current_hash != jQuery.historyCurrentHash) {
 
@@ -89,8 +87,7 @@ jQuery.extend({
 
             }
         } else if (jQuery.browser.safari) {
-            if (jQuery.lastHistoryLength == history.length
-                    && jQuery.historyBackStack.length > jQuery.lastHistoryLength) {
+            if (jQuery.lastHistoryLength == history.length && jQuery.historyBackStack.length > jQuery.lastHistoryLength) {
                 jQuery.historyBackStack.shift();
             }
             if (!jQuery.dontCheck) {
@@ -108,15 +105,14 @@ jQuery.extend({
                         for (var i = 0; i < historyDelta; i++)
                             jQuery.historyBackStack.push(jQuery.historyForwardStack.shift());
                     }
-                    var cachedHash = jQuery.historyBackStack[jQuery.historyBackStack.length
-                            - 1];
+                    var cachedHash = jQuery.historyBackStack[jQuery.historyBackStack.length - 1];
                     if (cachedHash != undefined) {
                         jQuery.historyCurrentHash = location.hash.replace(/\?.*$/,
-                                "");
+                            "");
                         jQuery.historyCallback(cachedHash);
                     }
-                } else if (jQuery.historyBackStack[jQuery.historyBackStack.length - 1] == undefined
-                        && !jQuery.isFirst) {
+                } else if (jQuery.historyBackStack[jQuery.historyBackStack.length - 1] == undefined && !
+                    jQuery.isFirst) {
                     // back button has been pushed to beginning and URL already pointed to hash (e.g. a bookmark)
                     // document.URL doesn't change in Safari
                     if (location.hash) {
@@ -138,7 +134,7 @@ jQuery.extend({
             }
         }
     },
-    historyLoad : function(hash) {
+    historyLoad: function(hash) {
         var newhash;
         hash = decodeURIComponent(hash.replace(/\?.*$/, ""));
 

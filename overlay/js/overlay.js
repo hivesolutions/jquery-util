@@ -62,29 +62,29 @@
          */
         var _registerHandlers = function() {
             matchedObject.bind("toggle", function(event, timeout) {
-                        var element = jQuery(this);
-                        _toggle(element, options, timeout);
-                    });
+                var element = jQuery(this);
+                _toggle(element, options, timeout);
+            });
 
             matchedObject.bind("show", function(event, timeout) {
-                        var element = jQuery(this);
-                        _show(element, options, timeout);
-                    });
+                var element = jQuery(this);
+                _show(element, options, timeout);
+            });
 
             matchedObject.bind("hide", function(event, timeout) {
-                        var element = jQuery(this);
-                        _hide(element, options, timeout);
-                    });
+                var element = jQuery(this);
+                _hide(element, options, timeout);
+            });
 
             matchedObject.bind("resize", function() {
-                        var element = jQuery(this);
-                        _hide(element, options);
-                    });
+                var element = jQuery(this);
+                _hide(element, options);
+            });
 
             jQuery(window).resize(function(event) {
-                        // resizes the matched object
-                        _resize(matchedObject, options);
-                    });
+                // resizes the matched object
+                _resize(matchedObject, options);
+            });
         };
 
         var _toggle = function(matchedObject, options, timeout) {
@@ -131,19 +131,19 @@
 
         // switches over the method
         switch (method) {
-            case "toggle" :
+            case "toggle":
                 _toggle(matchedObject, options);
                 break;
 
-            case "show" :
+            case "show":
                 _show(matchedObject, options);
                 break;
 
-            case "hide" :
+            case "hide":
                 _hide(matchedObject, options);
                 break;
 
-            case "default" :
+            case "default":
                 // initializes the plugin
                 initialize();
                 break;

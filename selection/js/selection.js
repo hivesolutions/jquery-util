@@ -56,28 +56,27 @@
         var _appendHtml = function() {
             // iterates over each of the matched objects
             matchedObject.each(function() {
-                        // retrieves the element
-                        var element = jQuery(this);
+                // retrieves the element
+                var element = jQuery(this);
 
-                        // retrieves the selection value
-                        var selection = element.attr("selection");
+                // retrieves the selection value
+                var selection = element.attr("selection");
 
-                        // creates the selection id
-                        var selectionId = "#" + selection;
+                // creates the selection id
+                var selectionId = "#" + selection;
 
-                        // retrieves the selection item
-                        var selectionItem = jQuery(selectionId, matchedObject);
+                // retrieves the selection item
+                var selectionItem = jQuery(selectionId, matchedObject);
 
-                        // shows the selection item
-                        _show(selectionItem, options);
-                    });
+                // shows the selection item
+                _show(selectionItem, options);
+            });
         };
 
         /**
          * Registers the event handlers for the created objects.
          */
-        var _registerHandlers = function() {
-        };
+        var _registerHandlers = function() {};
 
         var _toggle = function(matchedObject, options) {
             // in case the matched object is active
@@ -117,23 +116,23 @@
 
         // switches over the method
         switch (method) {
-            case "toggle" :
+            case "toggle":
                 _toggle(matchedObject, options);
                 break;
 
-            case "show" :
+            case "show":
                 _show(matchedObject, options);
                 break;
 
-            case "hide" :
+            case "hide":
                 _hide(matchedObject, options);
                 break;
 
-            case "hideAll" :
+            case "hideAll":
                 _hideAll(matchedObject, options);
                 break;
 
-            case "default" :
+            case "default":
                 // initializes the plugin
                 initialize();
                 break;
