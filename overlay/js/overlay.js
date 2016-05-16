@@ -61,14 +61,16 @@
          * Registers the event handlers for the created objects.
          */
         var _registerHandlers = function() {
+            var _window = jQuery(window);
+
             matchedObject.bind("toggle", function(event, timeout) {
                 var element = jQuery(this);
                 _toggle(element, options, timeout);
             });
 
-            matchedObject.bind("show", function(event, timeout) {
+            matchedObject.bind("show", function(event, timeout, autohide) {
                 var element = jQuery(this);
-                _show(element, options, timeout);
+                _show(element, options, timeout, autohide);
             });
 
             matchedObject.bind("hide", function(event, timeout) {
@@ -81,7 +83,7 @@
                 _hide(element, options);
             });
 
-            jQuery(window).resize(function(event) {
+            _window.resize(function(event) {
                 // resizes the matched object
                 _resize(matchedObject, options);
             });
@@ -98,11 +100,15 @@
             }
         };
 
-        var _show = function(matchedObject, options, timeout) {
+        var _show = function(matchedObject, options, timeout, autohide) {
             // shows the matched object and then runs
             // the show operation for the overlay element
             _resize(matchedObject, options);
             matchedObject.fadeIn(timeout || 250);
+            autohide && matchedObject.one("click", function() {
+                var _body = jQuery("body");
+                _body.triggerHandler("hide_modal");
+            });
         };
 
         var _hide = function(matchedObject, options, timeout) {
