@@ -53,10 +53,6 @@
          * Creates the necessary html for the component.
          */
         var _appendHtml = function() {
-            if (!matchedObject || matchedObject.length == 0) {
-                return;
-            }
-
             // adds the overlay class to the matched object
             matchedObject.addClass("overlay");
         };
@@ -65,30 +61,14 @@
          * Registers the event handlers for the created objects.
          */
         var _registerHandlers = function() {
-            if (!matchedObject || matchedObject.length == 0) {
-                return;
-            }
-
-            var _window = jQuery(window);
-
-            matchedObject.click(function() {
-                var element = jQuery(this);
-                var _body = jQuery("body");
-                var autohide = element.data("autohide");
-                if (!autohide) {
-                    return;
-                }
-                _body.triggerHandler("hide_modal");
-            });
-
             matchedObject.bind("toggle", function(event, timeout) {
                 var element = jQuery(this);
                 _toggle(element, options, timeout);
             });
 
-            matchedObject.bind("show", function(event, timeout, autohide) {
+            matchedObject.bind("show", function(event, timeout) {
                 var element = jQuery(this);
-                _show(element, options, timeout, autohide);
+                _show(element, options, timeout);
             });
 
             matchedObject.bind("hide", function(event, timeout) {
@@ -101,7 +81,7 @@
                 _hide(element, options);
             });
 
-            _window.resize(function(event) {
+            jQuery(window).resize(function(event) {
                 // resizes the matched object
                 _resize(matchedObject, options);
             });
@@ -118,10 +98,9 @@
             }
         };
 
-        var _show = function(matchedObject, options, timeout, autohide) {
+        var _show = function(matchedObject, options, timeout) {
             // shows the matched object and then runs
             // the show operation for the overlay element
-            matchedObject.data("autohide", autohide);
             _resize(matchedObject, options);
             matchedObject.fadeIn(timeout || 250);
         };
