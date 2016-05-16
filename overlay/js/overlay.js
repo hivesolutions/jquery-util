@@ -53,6 +53,10 @@
          * Creates the necessary html for the component.
          */
         var _appendHtml = function() {
+            if (!matchedObject || matchedObject.length == 0) {
+                return;
+            }
+
             // adds the overlay class to the matched object
             matchedObject.addClass("overlay");
         };
@@ -61,7 +65,21 @@
          * Registers the event handlers for the created objects.
          */
         var _registerHandlers = function() {
+            if (!matchedObject || matchedObject.length == 0) {
+                return;
+            }
+
             var _window = jQuery(window);
+
+            matchedObject.click(function() {
+                var element = jQuery(this);
+                var _body = jQuery("body");
+                var autohide = element.data("autohide");
+                if (!autohide) {
+                    return;
+                }
+                _body.triggerHandler("hide_modal");
+            });
 
             matchedObject.bind("toggle", function(event, timeout) {
                 var element = jQuery(this);
@@ -103,12 +121,9 @@
         var _show = function(matchedObject, options, timeout, autohide) {
             // shows the matched object and then runs
             // the show operation for the overlay element
+            matchedObject.data("autohide", autohide);
             _resize(matchedObject, options);
             matchedObject.fadeIn(timeout || 250);
-            autohide && matchedObject.one("click", function() {
-                var _body = jQuery("body");
-                _body.triggerHandler("hide_modal");
-            });
         };
 
         var _hide = function(matchedObject, options, timeout) {
