@@ -269,8 +269,9 @@
                 s.global && jQuery.active--;
                 return;
             }
-            if (xhr.aborted)
+            if (xhr.aborted) {
                 return;
+            }
 
             var cbInvoked = false;
             var timedOut = 0;
@@ -716,8 +717,7 @@
 
         if (successful && (!n || element.disabled || t === "reset" || t === "button" || (t === "checkbox" || t ==
                     "radio") && !element.checked || (t === "submit" || t === "image") && element.form &&
-                element.form
-                .clk !== element || tag === "select" && element.selectedIndex === -1))
+                element.form.clk !== element || tag === "select" && element.selectedIndex === -1))
             return null;
 
         if (tag === "select") {
@@ -773,12 +773,13 @@
         return this.each(function() {
             var t = this.type,
                 tag = this.tagName.toLowerCase();
-            if (t === "text" || t === "password" || tag === "textarea")
+            if (t === "text" || t === "password" || tag === "textarea") {
                 this.value = "";
-            else if (t === "checkbox" || t === "radio")
+            } else if (t === "checkbox" || t === "radio") {
                 this.checked = false;
-            else if (tag === "select")
+            } else if (tag === "select") {
                 this.selectedIndex = -1;
+            }
         });
     };
 
@@ -790,8 +791,9 @@
         return this.each(function() {
             // guard against an input with the name of reset
             // note that IE reports the reset function as an object
-            if (typeof this.reset === "function" || (typeof this.reset === "object" && !this.reset.nodeType))
+            if (typeof this.reset === "function" || (typeof this.reset === "object" && !this.reset.nodeType)) {
                 this.reset();
+            }
         });
     };
 
@@ -799,8 +801,9 @@
      * Enables or disables any matching elements.
      */
     jQuery.fn.enable = function(b) {
-        if (b === undefined)
+        if (b === undefined) {
             b = true;
+        }
         return this.each(function() {
             this.disabled = !b;
         });

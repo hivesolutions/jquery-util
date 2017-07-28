@@ -78,7 +78,8 @@
         // the variable value with the default value in case
         // it's necessary and returns it to the caller function
         var variableValue = jQuery("#" + variableName, environmentElement).html();
-        var variableValue = variableValue === null ? defaultValue : variableValue;
+        var variableValue = variableValue === null || variableValue === undefined ? defaultValue :
+            variableValue;
         return variableValue;
     };
 })(jQuery);
