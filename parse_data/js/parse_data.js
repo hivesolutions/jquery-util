@@ -72,7 +72,7 @@
 
                 // in case the child class does not exists
                 // in the parsed classes
-                if (childClassName && parsedClasses.indexOf(childClassName) == -1) {
+                if (childClassName && parsedClasses.indexOf(childClassName) === -1) {
                     // adds the child class name to the parsed classes
                     parsedClasses.push(childClassName);
 

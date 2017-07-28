@@ -39,7 +39,7 @@ jQuery.extend({
         if (jQuery.historyNeedIframe) {
             // stops the callback firing twice during initilization
             // if no hash present
-            if (jQuery.historyCurrentHash == "") {
+            if (jQuery.historyCurrentHash === "") {
                 jQuery.historyCurrentHash = "#";
             }
 
@@ -79,7 +79,7 @@ jQuery.extend({
             var ihistory = jQuery("#jQuery_history")[0];
             var iframe = ihistory.contentDocument || ihistory.contentWindow.document;
             var current_hash = iframe.location.hash.replace(/\?.*$/, "");
-            if (current_hash != jQuery.historyCurrentHash) {
+            if (current_hash !== jQuery.historyCurrentHash) {
 
                 location.hash = current_hash;
                 jQuery.historyCurrentHash = current_hash;
@@ -87,7 +87,7 @@ jQuery.extend({
 
             }
         } else if (jQuery.browser.safari) {
-            if (jQuery.lastHistoryLength == history.length && jQuery.historyBackStack.length > jQuery.lastHistoryLength) {
+            if (jQuery.lastHistoryLength === history.length && jQuery.historyBackStack.length > jQuery.lastHistoryLength) {
                 jQuery.historyBackStack.shift();
             }
             if (!jQuery.dontCheck) {
@@ -106,12 +106,12 @@ jQuery.extend({
                             jQuery.historyBackStack.push(jQuery.historyForwardStack.shift());
                     }
                     var cachedHash = jQuery.historyBackStack[jQuery.historyBackStack.length - 1];
-                    if (cachedHash != undefined) {
+                    if (cachedHash !== null && cachedHash !== undefined) {
                         jQuery.historyCurrentHash = location.hash.replace(/\?.*$/,
                             "");
                         jQuery.historyCallback(cachedHash);
                     }
-                } else if (jQuery.historyBackStack[jQuery.historyBackStack.length - 1] == undefined && !
+                } else if (jQuery.historyBackStack[jQuery.historyBackStack.length - 1] === undefined && !
                     jQuery.isFirst) {
                     // back button has been pushed to beginning and URL already pointed to hash (e.g. a bookmark)
                     // document.URL doesn't change in Safari
@@ -128,7 +128,7 @@ jQuery.extend({
         } else {
             // otherwise, check for location.hash
             var current_hash = location.hash.replace(/\?.*$/, "");
-            if (current_hash != jQuery.historyCurrentHash) {
+            if (current_hash !== jQuery.historyCurrentHash) {
                 jQuery.historyCurrentHash = current_hash;
                 jQuery.historyCallback(current_hash.replace(/^#/, ""));
             }

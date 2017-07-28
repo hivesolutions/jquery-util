@@ -81,7 +81,7 @@
             // series of pre-defined values
             var isWindow = !element.nodeName || jQuery.inArray(element.nodeName.toLowerCase(), [
                 "iframe", "#document", "html", "body"
-            ]) != -1;
+            ]) !== -1;
 
             // in case the element is not a window it's immediately
             // considered scrollable and so it's returned to the
@@ -99,7 +99,7 @@
             // of the current document as the scrolling element/target
             // note that the proper element to be returned is defined
             // using browser detection (webkit is considered special)
-            return jQuery.browser.webkit || _document.compatMode == "BackCompat" ? _document.body :
+            return jQuery.browser.webkit || _document.compatMode === "BackCompat" ? _document.body :
                 _document.documentElement;
         });
     };
@@ -107,12 +107,12 @@
     jQuery.fn.scrollTo = function(target, duration, settings) {
         // in case the target is not defined or in case it's
         // an empty array, must return immdiately, nothing to be done
-        if (!target || target.length == 0) {
+        if (!target || target.length === 0) {
             return;
         }
 
         // in case the duration is an object
-        if (typeof duration == "object") {
+        if (typeof duration === "object") {
             settings = duration;
             duration = 0;
         }
@@ -120,7 +120,7 @@
         // in case the settings is a function, sets it as the
         // callback (on after) function to be called at the
         // the end of the animation
-        if (typeof settings == "function") {
+        if (typeof settings === "function") {
             settings = {
                 onAfter: settings
             };
@@ -128,7 +128,7 @@
 
         // in case the target is the maximum, the target is
         // set as a really large number (bottom of screen)
-        if (target == "max") {
+        if (target === "max") {
             // set the target to a really big value,
             // so that the scroll target is ensured
             // to be as bottom as possible
@@ -186,7 +186,7 @@
 
             // in case the target is not defined or in case it's
             // an empty array, must return immdiately, nothing to be done
-            if (!_target || _target.length == 0) {
+            if (!_target || _target.length === 0) {
                 return;
             }
 
@@ -194,7 +194,7 @@
                 // retrieves the position and converts it to lower case
                 // then retrieves the key to the position, the old
                 // element and the maximum between the axis and the element
-                var position = axis == "x" ? "Left" : "Top";
+                var position = axis === "x" ? "Left" : "Top";
                 var positionLower = position.toLowerCase();
                 var key = "scroll" + position;
                 var old = element[key];
@@ -216,7 +216,7 @@
 
                     if (settings.over[positionLower])
                         // scrolls to a fraction of its width/height
-                        attributes[key] += _target[axis == "x" ? "width" : "height"]() *
+                        attributes[key] += _target[axis === "x" ? "width" : "height"]() *
                         settings.over[positionLower];
                 }
                 // otherwise no offset should be used
@@ -225,7 +225,7 @@
                     var value = _target[positionLower];
 
                     // handles the percentage values
-                    attributes[key] = value.slice && value.slice(-1) == "%" ? parseFloat(value) /
+                    attributes[key] = value.slice && value.slice(-1) === "%" ? parseFloat(value) /
                         100 * max : value;
                 }
 
@@ -239,7 +239,7 @@
                 // in case it's queueing axes
                 if (!index && settings.queue) {
                     // avoids wasting time animating, if there's no need
-                    if (old != attributes[key]) {
+                    if (old !== attributes[key]) {
                         // intermediate animation
                         animate(settings.onAfterFirst);
                     }
@@ -283,7 +283,7 @@
     scrollTo.max = function(element, axis) {
         // retrieves both the dimension and the scroll
         // references
-        var dimensions = axis == "x" ? "Width" : "Height";
+        var dimensions = axis === "x" ? "Width" : "Height";
         var scroll = "scroll" + dimensions;
 
         // in case the element represents an html or
@@ -316,7 +316,7 @@
      * @return {Map} The map with the top and left key set to the value.
      */
     var both = function(value) {
-        return typeof value == "object" ? value : {
+        return typeof value === "object" ? value : {
             top: value,
             left: value
         };

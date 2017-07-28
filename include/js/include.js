@@ -67,7 +67,7 @@ jQuery.extend({
      */
     include: function(url, callback, dependency) {
         // in case no callback is sent and dependency is defined
-        if (typeof callback != "function" && !dependency) {
+        if (typeof callback !== "function" && !dependency) {
             // sets the dependency as the callback (second argument)
             // and invalidates the callback
             dependency = callback;
@@ -97,7 +97,7 @@ jQuery.extend({
         // sets the on ready state chante callback in the script element
         script.onreadystatechange = function() {
             // in case the ready state is not valid
-            if (this.readyState != "complete" && this.readyState != "loaded") {
+            if (this.readyState !== "complete" && this.readyState !== "loaded") {
                 // returns immediately
                 return;
             }
@@ -119,7 +119,7 @@ jQuery.extend({
         // in case there is a dependency defined
         if (dependency) {
             // in case the dependency is not defined as a list
-            if (dependency.constructor != Array) {
+            if (dependency.constructor !== Array) {
                 // creates a list of one element for the dependency
                 dependency = [dependency];
             }

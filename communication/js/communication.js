@@ -63,7 +63,7 @@
                         // tries to parse the received data as json information
                         // in case it fails raises a message indicating that the
                         // unpacking operation did not succeed
-                        data = typeof data == "object" ? data : jQuery.parseJSON(data);
+                        data = typeof data === "object" ? data : jQuery.parseJSON(data);
                     } catch (exception) {
                         throw "No valid json data received";
                     }
@@ -72,7 +72,7 @@
                     // and notifies the success handler in case the result
                     // was success
                     var result = data["result"];
-                    if (result == "success") {
+                    if (result === "success") {
                         options.success(data);
                     }
                     // in case the result value from the message is not succes
@@ -171,7 +171,7 @@
             // or in case it's an empty list must return
             // immediatly initialization is not meant to
             // be run (corruption may occur)
-            if (!matchedObject || matchedObject.length == 0) {
+            if (!matchedObject || matchedObject.length === 0) {
                 return;
             }
 
@@ -385,7 +385,7 @@
                     // is currently disconnected tries to connect it again
                     // otherwise runs the "normal" update command to obtain new
                     // data fro the service source
-                    var method = status == DISCONNECTED_STATUS ? _connect : _update;
+                    var method = status === DISCONNECTED_STATUS ? _connect : _update;
 
                     // sets the timeout for connection, and
                     // retrieves the timeout handler
@@ -446,7 +446,7 @@
 
             // in case the "new" status is the same
             // as the current status
-            if (currentStatus == status) {
+            if (currentStatus === status) {
                 // returns immediately
                 return;
             }

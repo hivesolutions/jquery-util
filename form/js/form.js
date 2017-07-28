@@ -37,7 +37,7 @@
 
         // in case the type of options is
         // a function
-        if (typeof options == "function") {
+        if (typeof options === "function") {
             // creates the options map
             options = {
                 success: options
@@ -127,7 +127,7 @@
 
         var q = jQuery.param(arrayValue);
 
-        if (options.type.toUpperCase() == "GET") {
+        if (options.type.toUpperCase() === "GET") {
             options.url += (options.url.indexOf("?") >= 0 ? "&" : "?") + q;
 
             // data is null for get
@@ -282,7 +282,7 @@
                 if (n && !sub.disabled) {
                     opts.extraData = opts.extraData || {};
                     opts.extraData[n] = sub.value;
-                    if (sub.type == "image") {
+                    if (sub.type === "image") {
                         opts.extraData[n + ".x"] = form.clk_x;
                         opts.extraData[n + ".y"] = form.clk_y;
                     }
@@ -297,9 +297,9 @@
 
                 // update form attrs in IE friendly way
                 form.setAttribute("target", id);
-                if (form.getAttribute("method") != "POST")
+                if (form.getAttribute("method") !== "POST")
                     form.setAttribute("method", "POST");
-                if (form.getAttribute("action") != opts.url)
+                if (form.getAttribute("action") !== opts.url)
                     form.setAttribute("action", opts.url);
 
                 // ie borks in some cases when setting encoding
@@ -360,9 +360,9 @@
                     doc = io.contentWindow ? io.contentWindow.document : io.contentDocument ? io.contentDocument :
                         io.document;
 
-                    var isXml = opts.dataType == "xml" || doc.XMLDocument || jQuery.isXMLDoc(doc);
+                    var isXml = opts.dataType === "xml" || doc.XMLDocument || jQuery.isXMLDoc(doc);
 
-                    if (!isXml && (doc.body == null || doc.body.innerHTML == "")) {
+                    if (!isXml && (doc.body === null || doc.body === undefined || doc.body.innerHTML === "")) {
                         if (--domCheckCount) {
                             setTimeout(cb, 250);
 
@@ -382,7 +382,7 @@
                         return headers[header];
                     };
 
-                    if (opts.dataType == "json" || opts.dataType == "script") {
+                    if (opts.dataType === "json" || opts.dataType === "script") {
                         // see if user embedded response in textarea
                         var ta = doc.getElementsByTagName("textarea")[0];
                         if (ta)
@@ -393,7 +393,7 @@
                             if (pre)
                                 xhr.responseText = pre.innerHTML;
                         }
-                    } else if (opts.dataType == "xml" && !xhr.responseXML && xhr.responseText != null) {
+                    } else if (opts.dataType === "xml" && !xhr.responseXML && xhr.responseText !== null) {
                         xhr.responseXML = toXml(xhr.responseText);
                     }
                     data = jQuery.httpData(xhr, opts.dataType);
@@ -436,7 +436,7 @@
                     doc.loadXML(s);
                 } else
                     doc = (new DOMParser()).parseFromString(s, "text/xml");
-                return (doc && doc.documentElement && doc.documentElement.tagName != "parsererror") ? doc :
+                return (doc && doc.documentElement && doc.documentElement.tagName !== "parsererror") ? doc :
                     null;
             }
         }
@@ -467,17 +467,17 @@
             if (!(_element.is(":submit,input:image"))) {
                 // is this a child element of the submit element?  (ex: a span within a button)
                 var t = _element.closest(":submit");
-                if (t.length == 0)
+                if (t.length === 0)
                     return;
                 target = t[0];
             }
             var form = this;
             form.clk = target;
-            if (target.type == "image") {
-                if (e.offsetX != undefined) {
+            if (target.type === "image") {
+                if (e.offsetX !== undefined) {
                     form.clk_x = e.offsetX;
                     form.clk_y = e.offsetY;
-                } else if (typeof jQuery.fn.offset == "function") { // try to use dimensions plugin
+                } else if (typeof jQuery.fn.offset === "function") { // try to use dimensions plugin
                     var offset = _element.offset();
                     form.clk_x = e.pageX - offset.left;
                     form.clk_y = e.pageY - offset.top;
@@ -515,7 +515,7 @@
         var arrayValue = [];
 
         // in case the length is zero
-        if (this.length == 0) {
+        if (this.length === 0) {
             // returns the array immediately
             return arrayValue;
         }
@@ -550,9 +550,9 @@
                 continue;
             }
 
-            if (semantic && form.clk && element.type == "image") {
-                // handle image inputs on the fly when semantic == true
-                if (!element.disabled && form.clk == element) {
+            if (semantic && form.clk && element.type === "image") {
+                // handle image inputs on the fly when semantic === true
+                if (!element.disabled && form.clk === element) {
                     arrayValue.push({
                         name: elementName,
                         value: jQuery(element).val()
@@ -573,14 +573,14 @@
 
             var elementValue = jQuery.fieldValue(element, true);
 
-            if (elementValue && elementValue.constructor == Array) {
+            if (elementValue && elementValue.constructor === Array) {
                 for (var j = 0, jmax = elementValue.length; j < jmax; j++) {
                     // retrieves the array value
                     var arrayValue = elementValue[j];
 
                     // in case the array value is not null or undefined
                     // and even not empty
-                    if (arrayValue !== null && typeof arrayValue != "undefined" && (emptyValid || arrayValue !=
+                    if (arrayValue !== null && typeof arrayValue !== "undefined" && (emptyValid || arrayValue !=
                             "")) {
                         arrayValue.push({
                             name: elementName,
@@ -591,8 +591,8 @@
             }
             // in case the value is not null or undefined
             // and even not empty
-            else if (elementValue !== null && typeof elementValue != "undefined" && (emptyValid || elementValue !=
-                    "")) {
+            else if (elementValue !== null && typeof elementValue !== "undefined" && (emptyValid ||
+                    elementValue !== "")) {
                 arrayValue.push({
                     name: elementName,
                     value: elementValue
@@ -605,7 +605,7 @@
             var jQueryinput = jQuery(form.clk),
                 input = jQueryinput[0],
                 elementName = input.name;
-            if (elementName && !input.disabled && input.type == "image") {
+            if (elementName && !input.disabled && input.type === "image") {
                 arrayValue.push({
                     name: elementName,
                     value: jQueryinput.val()
@@ -645,13 +645,13 @@
             if (!n)
                 return;
             var v = jQuery.fieldValue(this, successful);
-            if (v && v.constructor == Array) {
+            if (v && v.constructor === Array) {
                 for (var i = 0, max = v.length; i < max; i++)
                     arrayValue.push({
                         name: n,
                         value: v[i]
                     });
-            } else if (v !== null && typeof v != "undefined")
+            } else if (v !== null && typeof v !== "undefined")
                 arrayValue.push({
                     name: this.name,
                     value: v
@@ -672,15 +672,15 @@
      * value="C1" /> <input name="C" type="radio" value="C2" /> </fieldset></form>
      *
      * var v = jQuery(":text").fieldValue(); // if no values are entered into
-     * the text inputs v == ["",""] // if values entered into the text inputs
-     * are "foo" and "bar" v == ["foo", "bar"]
+     * the text inputs v === ["",""] // if values entered into the text inputs
+     * are "foo" and "bar" v === ["foo", "bar"]
      *
      * var v = jQuery(":checkbox").fieldValue(); // if neither checkbox is
-     * checked v === undefined // if both checkboxes are checked v == ["B1",
+     * checked v === undefined // if both checkboxes are checked v === ["B1",
      * "B2"]
      *
      * var v = jQuery(":radio").fieldValue(); // if neither radio is checked v
-     * === undefined // if first radio is checked v == ["C1"]
+     * === undefined // if first radio is checked v === ["C1"]
      *
      * The successful argument controls whether or not the field element must be
      * "successful" (per
@@ -696,9 +696,9 @@
         for (var val = [], i = 0, max = this.length; i < max; i++) {
             var element = this[i];
             var v = jQuery.fieldValue(element, successful);
-            if (v === null || typeof v == "undefined" || (v.constructor == Array && !v.length))
+            if (v === null || typeof v === "undefined" || (v.constructor === Array && !v.length))
                 continue;
-            v.constructor == Array ? jQuery.merge(val, v) : val.push(v);
+            v.constructor === Array ? jQuery.merge(val, v) : val.push(v);
         }
         return val;
     };
@@ -711,21 +711,22 @@
             t = element.type,
             tag = element.tagName.toLowerCase();
 
-        if (typeof successful == "undefined")
+        if (typeof successful === "undefined")
             successful = true;
 
-        if (successful && (!n || element.disabled || t == "reset" || t == "button" || (t == "checkbox" || t ==
-                    "radio") && !element.checked || (t == "submit" || t == "image") && element.form && element.form
-                .clk != element || tag == "select" && element.selectedIndex == -1))
+        if (successful && (!n || element.disabled || t === "reset" || t === "button" || (t === "checkbox" || t ==
+                    "radio") && !element.checked || (t === "submit" || t === "image") && element.form &&
+                element.form
+                .clk !== element || tag === "select" && element.selectedIndex === -1))
             return null;
 
-        if (tag == "select") {
+        if (tag === "select") {
             var index = element.selectedIndex;
             if (index < 0)
                 return null;
             var arrayValue = [],
                 ops = element.options;
-            var one = (t == "select-one");
+            var one = (t === "select-one");
             var max = (one ? index + 1 : ops.length);
             for (var i = (one ? index : 0); i < max; i++) {
                 var op = ops[i];
@@ -772,11 +773,11 @@
         return this.each(function() {
             var t = this.type,
                 tag = this.tagName.toLowerCase();
-            if (t == "text" || t == "password" || tag == "textarea")
+            if (t === "text" || t === "password" || tag === "textarea")
                 this.value = "";
-            else if (t == "checkbox" || t == "radio")
+            else if (t === "checkbox" || t === "radio")
                 this.checked = false;
-            else if (tag == "select")
+            else if (tag === "select")
                 this.selectedIndex = -1;
         });
     };
@@ -789,7 +790,7 @@
         return this.each(function() {
             // guard against an input with the name of reset
             // note that IE reports the reset function as an object
-            if (typeof this.reset == "function" || (typeof this.reset == "object" && !this.reset.nodeType))
+            if (typeof this.reset === "function" || (typeof this.reset === "object" && !this.reset.nodeType))
                 this.reset();
         });
     };
@@ -798,7 +799,7 @@
      * Enables or disables any matching elements.
      */
     jQuery.fn.enable = function(b) {
-        if (b == undefined)
+        if (b === undefined)
             b = true;
         return this.each(function() {
             this.disabled = !b;
@@ -810,15 +811,15 @@
      * selects/deselects and matching option elements.
      */
     jQuery.fn.selected = function(select) {
-        if (select == undefined)
+        if (select === undefined)
             select = true;
         return this.each(function() {
             var t = this.type;
-            if (t == "checkbox" || t == "radio") {
+            if (t === "checkbox" || t === "radio") {
                 this.checked = select;
-            } else if (this.tagName.toLowerCase() == "option") {
+            } else if (this.tagName.toLowerCase() === "option") {
                 var _select = jQuery(this).parent("select");
-                if (select && _select[0] && _select[0].type == "select-one") {
+                if (select && _select[0] && _select[0].type === "select-one") {
                     // deselect all other options
                     _select.find("option").selected(false);
                 }
