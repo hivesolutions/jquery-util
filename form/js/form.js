@@ -647,16 +647,18 @@
                 return;
             var v = jQuery.fieldValue(this, successful);
             if (v && v.constructor === Array) {
-                for (var i = 0, max = v.length; i < max; i++)
+                for (var i = 0, max = v.length; i < max; i++) {
                     arrayValue.push({
                         name: n,
                         value: v[i]
                     });
-            } else if (v !== null && typeof v !== "undefined")
+                }
+            } else if (v !== null && typeof v !== "undefined") {
                 arrayValue.push({
                     name: this.name,
                     value: v
                 });
+            }
         });
 
         // hands off to jQuery.param for proper encoding
@@ -717,8 +719,9 @@
 
         if (successful && (!n || element.disabled || t === "reset" || t === "button" || (t === "checkbox" || t ==
                     "radio") && !element.checked || (t === "submit" || t === "image") && element.form &&
-                element.form.clk !== element || tag === "select" && element.selectedIndex === -1))
+                element.form.clk !== element || tag === "select" && element.selectedIndex === -1)) {
             return null;
+        }
 
         if (tag === "select") {
             var index = element.selectedIndex;
@@ -732,11 +735,13 @@
                 var op = ops[i];
                 if (op.selected) {
                     var v = op.value;
-                    if (!v) // extra pain for IE...
+                    if (!v) {
                         v = (op.attributes && op.attributes["value"] && !(op.attributes["value"].specified)) ?
-                        op.text : op.value;
-                    if (one)
+                            op.text : op.value;
+                    }
+                    if (one) {
                         return v;
+                    }
                     arrayValue.push(v);
                 }
             }

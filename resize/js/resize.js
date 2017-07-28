@@ -180,20 +180,18 @@
                 // If called from the polling loop, w and h will be passed in as
                 // arguments. If called manually, via .trigger( 'resize' ) or .resize(),
                 // those values will need to be computed.
-                data.w = w != null && w !== undefined ? w : elem.width();
-                data.h = h != null && h !== undefined ? h : elem.height();
+                data.w = w !== null && w !== undefined ? w : elem.width();
+                data.h = h !== null && h !== undefined ? h : elem.height();
 
                 old_handler.apply(this, arguments);
             };
 
-            // This may seem a little complicated, but it normalizes the special event
-            // .add method between jQuery 1.4/1.4.1 and 1.4.2+
+            // this may seem a little complicated, but it normalizes the special event
+            // .add method between newer and older versions
             if (jQuery.isFunction(handleObj)) {
-                // 1.4, 1.4.1
                 old_handler = handleObj;
                 return new_handler;
             } else {
-                // 1.4.2+
                 old_handler = handleObj.handler;
                 handleObj.handler = new_handler;
             }
@@ -218,7 +216,6 @@
                 if (width !== data.w || height !== data.h) {
                     elem.trigger(str_resize, [data.w = width, data.h = height]);
                 }
-
             });
 
             // loops around
