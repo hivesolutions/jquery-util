@@ -27,7 +27,7 @@
     jQuery.fn.message = function(options) {
         // creates the "final" options map by extending the
         // provided options with the default ones
-        var options = jQuery.extend({
+        options = jQuery.extend({
             delay: 1000
         }, options);
 
@@ -138,13 +138,13 @@
         };
 
         // sets the default method value
-        var method = method ? method : "default";
+        method = method || "default";
 
         // sets the default options value
-        var options = options ? options : {};
+        options = options || {};
 
         // constructs the options
-        var options = jQuery.extend(defaults, options);
+        options = jQuery.extend(defaults, options);
 
         // sets the jquery matched object
         var matchedObject = this;
@@ -216,7 +216,7 @@
 
             // creates the channels string by joining the various
             // channel names using the comma separator
-            var channelsS = channels.join(",")
+            var channelsS = channels.join(",");
 
             // runs the remote call to the server side to provide
             // the connect operation expected behavior
@@ -430,7 +430,7 @@
 
             // sets the default data callback functions, defaulting
             // to an empty list in case their not provided
-            callbacks = callbacks ? callbacks : [];
+            callbacks = callbacks || [];
 
             // iterates over all the data callback functions and calls
             // each of them with the received data
