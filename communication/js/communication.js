@@ -56,7 +56,7 @@
                     // in case no valid data is received notifies the client
                     // about the error and returns the control immediately
                     if (!data) {
-                        throw "Empty message received";
+                        throw Error("Empty message received");
                     }
 
                     try {
@@ -65,7 +65,7 @@
                         // unpacking operation did not succeed
                         data = typeof data === "object" ? data : jQuery.parseJSON(data);
                     } catch (exception) {
-                        throw "No valid json data received";
+                        throw Error("No valid JSON data received");
                     }
 
                     // retrieves the result string value from the (json) data
@@ -89,13 +89,17 @@
                 }
             },
             error: function(request, textStatus, errorThrown) {
+                // sets the default data value as invalid, this is
+                // going to be set latter
+                var data = null;
+
                 try {
                     // tries to parse the text status as json information
                     // in case it fails or no data is received an invalid
                     // data structure is used instead
-                    var data = textStatus ? jQuery.parseJSON(textStatus) : null;
+                    data = textStatus ? jQuery.parseJSON(textStatus) : null;
                 } catch (exception) {
-                    var data = null;
+                    data = null;
                 }
 
                 // in case a valid data is going to be used the error is
