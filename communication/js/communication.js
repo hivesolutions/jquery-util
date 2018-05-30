@@ -388,7 +388,7 @@
                     // according to the current status, in case the connection
                     // is currently disconnected tries to connect it again
                     // otherwise runs the "normal" update command to obtain new
-                    // data fro the service source
+                    // data for the service source
                     var method = status === DISCONNECTED_STATUS ? _connect : _update;
 
                     // sets the timeout for connection, and
