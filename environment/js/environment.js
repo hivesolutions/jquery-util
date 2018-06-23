@@ -24,28 +24,25 @@
 // __license__   = Apache License, Version 2.0
 
 (function(jQuery) {
-    jQuery.resolveurl = function(url, options) {
+    jQuery.resolveurl = function(url, method, options) {
         // the default values for the resolve url
         var defaults = {};
 
         // sets the default method value
-        var method = method ? method : "default";
+        method = method || "default";
 
         // sets the default options value
-        var options = options ? options : {};
+        options = options || {};
 
         // constructs the options
-        var options = jQuery.extend(defaults, options);
-
-        // sets the jquery matched object
-        var matchedObject = this;
+        options = jQuery.extend(defaults, options);
 
         // retrieves the base path environment variable
         var basePath = jQuery.environment("base-path");
 
         // re-creates the url using the base path, in case
         // there is a valid base path
-        var url = basePath ? basePath + url : url;
+        url = basePath ? basePath + url : url;
 
         // returns the "resolved" url
         return url;
@@ -53,23 +50,20 @@
 })(jQuery);
 
 (function(jQuery) {
-    jQuery.environment = function(variableName, defaultValue, options) {
+    jQuery.environment = function(variableName, defaultValue, method, options) {
         // the default values for the environment
         var defaults = {
             environmentElement: jQuery("#environment-variables")
         };
 
         // sets the default method value
-        var method = method ? method : "default";
+        method = method || "default";
 
         // sets the default options value
-        var options = options ? options : {};
+        options = options || {};
 
         // constructs the options
-        var options = jQuery.extend(defaults, options);
-
-        // sets the jquery matched object
-        var matchedObject = this;
+        options = jQuery.extend(defaults, options);
 
         // retrieves the environment element
         var environmentElement = options["environmentElement"];
@@ -78,7 +72,7 @@
         // the variable value with the default value in case
         // it's necessary and returns it to the caller function
         var variableValue = jQuery("#" + variableName, environmentElement).html();
-        var variableValue = variableValue === null || variableValue === undefined ? defaultValue :
+        variableValue = variableValue === null || variableValue === undefined ? defaultValue :
             variableValue;
         return variableValue;
     };
