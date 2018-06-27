@@ -162,8 +162,9 @@
                 jQuery(options.target)[fn](data).each(oldSuccess,
                     arguments);
             });
-        } else if (options.success)
+        } else if (options.success) {
             callbacks.push(options.success);
+        }
 
         options.success = function(data, status, xhr) {
             for (var i = 0, max = callbacks.length; i < max; i++) {
@@ -215,7 +216,7 @@
 
             if (jQuery(":input[name=submit]", form).length) {
                 // throws an exception
-                throw "Error: Form elements must not be named \"submit\".";
+                throw new Error("Error: Form elements must not be named \"submit\".");
             }
 
             var opts = jQuery.extend({}, jQuery.ajaxSettings, options);
@@ -286,8 +287,8 @@
             // take a breath so that pending repaints get some cpu time before the upload starts
             function doSubmit() {
                 // make sure form attrs are set
-                var t = _form.attr("target"),
-                    arrayValue = _form.attr("action");
+                var t = _form.attr("target");
+                var arrayValue = _form.attr("action");
 
                 // update form attrs in IE friendly way
                 form.setAttribute("target", id);
@@ -354,7 +355,7 @@
                 var ok = true;
                 try {
                     if (timedOut) {
-                        throw "timeout";
+                        throw new Error("timeout");
                     }
                     // extract the server response from the iframe
                     var data, doc;
@@ -387,13 +388,15 @@
                     if (opts.dataType === "json" || opts.dataType === "script") {
                         // see if user embedded response in textarea
                         var ta = doc.getElementsByTagName("textarea")[0];
-                        if (ta)
+                        if (ta) {
                             xhr.responseText = ta.value;
+                        }
                         else {
                             // account for browsers injecting pre around json response
                             var pre = doc.getElementsByTagName("pre")[0];
-                            if (pre)
+                            if (pre) {
                                 xhr.responseText = pre.innerHTML;
+                            }
                         }
                     } else if (opts.dataType === "xml" && !xhr.responseXML && xhr.responseText !== null) {
                         xhr.responseXML = toXml(xhr.responseText);
@@ -408,8 +411,9 @@
                 // ordering of these callbacks/triggers is odd, but that's how jQuery.ajax does it
                 if (ok) {
                     opts.success(data, "success");
-                    if (g)
+                    if (g) {
                         jQuery.event.trigger("ajaxSuccess", [xhr, opts]);
+                    }
                 }
                 if (g) {
                     jQuery.event.trigger("ajaxComplete", [xhr, opts]);
@@ -513,7 +517,7 @@
      */
     jQuery.fn.formToArray = function(semantic, options) {
         // sets the default options value
-        options = options ? options : {};
+        options = options || {};
 
         // creates the array value
         var arrayValue = [];
@@ -604,9 +608,9 @@
 
         if (!semantic && form.clk) {
             // input type=="image" are not found in elements array! handle it here
-            var jQueryinput = jQuery(form.clk),
-                input = jQueryinput[0],
-                elementName = input.name;
+            var jQueryinput = jQuery(form.clk);
+            var input = jQueryinput[0];
+            var elementName = input.name;
             if (elementName && !input.disabled && input.type === "image") {
                 arrayValue.push({
                     name: elementName,
@@ -631,7 +635,7 @@
      * a string in the format: name1=value1&amp;name2=value2
      */
     jQuery.fn.formSerialize = function(semantic) {
-        //hand off to jQuery.param for proper encoding
+        // hand off to jQuery.param for proper encoding
         return jQuery.param(this.formToArray(semantic));
     };
 
@@ -781,8 +785,8 @@
      */
     jQuery.fn.clearFields = jQuery.fn.clearInputs = function() {
         return this.each(function() {
-            var t = this.type,
-                tag = this.tagName.toLowerCase();
+            var t = this.type;
+            var tag = this.tagName.toLowerCase();
             if (t === "text" || t === "password" || tag === "textarea") {
                 this.value = "";
             } else if (t === "checkbox" || t === "radio") {
