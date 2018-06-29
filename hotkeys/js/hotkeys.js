@@ -167,10 +167,10 @@
             return this.__bind__(type, data, fn);
         } else {
             // splits the job
-            var result = null,
+            var result = null;
 
-                // passes the rest to the original jQuery.fn.bind
-                pass2jq = jQuery.trim(type.replace(hotkeys.override, ""));
+            // passes the rest to the original jQuery.fn.bind
+            var pass2jq = jQuery.trim(type.replace(hotkeys.override, ""));
 
             // see if there are other types, pass them to the original jQuery.fn.bind
             if (pass2jq) {
@@ -185,10 +185,9 @@
             if (data.combi) {
                 for (var x = 0; x < handle.length; x++) {
                     var eventType = handle[x];
-                    var combi = data.combi.toLowerCase(),
-                        trigger = hotkeys.newTrigger(
-                            eventType, combi, fn),
-                        selectorId = ((this.prevObject && this.prevObject.query) || (this[0].id && this[0].id) ||
+                    var combi = data.combi.toLowerCase();
+                    var trigger = hotkeys.newTrigger(eventType, combi, fn);
+                    var selectorId = ((this.prevObject && this.prevObject.query) || (this[0].id && this[0].id) ||
                             this[0]).toString();
 
                     trigger[eventType][combi].disableInInput = data.disableInInput;
@@ -210,8 +209,7 @@
                     } else if (mapPoint.constructor !== Array) {
                         hotkeys.triggersMap[selectorId][eventType][combi] = [mapPoint];
                     } else {
-                        hotkeys.triggersMap[selectorId][eventType][combi][mapPoint.length] = trigger[eventType]
-                            [combi];
+                        hotkeys.triggersMap[selectorId][eventType][combi][mapPoint.length] = trigger[eventType][combi];
                     }
 
                     // adds attribute and calls jquery event add per eached matched element
@@ -251,22 +249,23 @@
 
     // the event handler (proper implementation)
     hotkeys.handler = function(event) {
-        var target = hotkeys.findElement(event.currentTarget),
-            jTarget = jQuery(target),
-            ids = jTarget.attr("hkId");
+        var target = hotkeys.findElement(event.currentTarget);
+        var jTarget = jQuery(target);
+        var ids = jTarget.attr("hkId");
 
         if (ids) {
             ids = ids.split(";");
-            var code = event.which,
-                type = event.type,
-                special = hotkeys.specialKeys[code],
-                // prevent f5 overlapping with "t" (or f4 with "s", etc.)
-                character = !special && String.fromCharCode(code).toLowerCase(),
-                shift = event.shiftKey,
-                ctrl = event.ctrlKey,
+            var code = event.which;
+            var type = event.type;
+            var special = hotkeys.specialKeys[code];
 
-                alt = event.altKey || event.originalEvent.altKey,
-                mapPoint = null;
+            // prevent f5 overlapping with "t" (or f4 with "s", etc.)
+            var character = !special && String.fromCharCode(code).toLowerCase();
+            var shift = event.shiftKey;
+            var ctrl = event.ctrlKey;
+
+            var alt = event.altKey || event.originalEvent.altKey;
+            var mapPoint = null;
 
             for (var x = 0; x < ids.length; x++) {
                 if (hotkeys.triggersMap[ids[x]][type]) {
