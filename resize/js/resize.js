@@ -27,19 +27,19 @@
 (function(jQuery, window, undefined) {
     // A jQuery object containing all non-window elements to which the resize
     // event is bound.
-    var elems = jQuery([]),
+    var elems = jQuery([]);
 
-        // Extend jQuery.resize if it already exists, otherwise create it.
-        jq_resize = jQuery.resize = jQuery.extend(jQuery.resize, {}),
+    // Extend jQuery.resize if it already exists, otherwise create it.
+    var jq_resize = jQuery.resize = jQuery.extend(jQuery.resize, {});
 
-        timeout_id,
+    var timeout_id;
 
-        // Reused strings.
-        str_setTimeout = "setTimeout",
-        str_resize = "resize",
-        str_data = str_resize + "-special-event",
-        str_delay = "delay",
-        str_throttle = "throttleWindow";
+    // Reused strings.
+    var str_setTimeout = "setTimeout";
+    var str_resize = "resize";
+    var str_data = str_resize + "-special-event";
+    var str_delay = "delay";
+    var str_throttle = "throttleWindow";
 
     // Property: jQuery.resize.delay
     //
@@ -174,8 +174,8 @@
             // comments above for more information.
 
             function new_handler(e, w, h) {
-                var elem = jQuery(this),
-                    data = jQuery.data(this, str_data);
+                var elem = jQuery(this);
+                var data = jQuery.data(this, str_data);
 
                 // If called from the polling loop, w and h will be passed in as
                 // arguments. If called manually, via .trigger( 'resize' ) or .resize(),
@@ -202,14 +202,12 @@
     function loopy() {
         // Start the polling loop, asynchronously.
         timeout_id = window[str_setTimeout](function() {
-
             // Iterate over all elements to which the 'resize' event is bound.
             elems.each(function() {
-                var elem = jQuery(this),
-                    width = elem.width(),
-                    height = elem.height(),
-                    data = jQuery.data(
-                        this, str_data);
+                var elem = jQuery(this);
+                var width = elem.width();
+                var height = elem.height();
+                var data = jQuery.data(this, str_data);
 
                 // If element size has changed since the last time, update the element
                 // data store and trigger the 'resize' event.
@@ -220,7 +218,6 @@
 
             // loops around
             loopy();
-
         }, jq_resize[str_delay]);
     };
 
