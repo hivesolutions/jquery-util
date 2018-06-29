@@ -85,7 +85,6 @@
                         result: "error",
                         message: message
                     });
-                    return;
                 }
             },
             error: function(request, textStatus, errorThrown) {
