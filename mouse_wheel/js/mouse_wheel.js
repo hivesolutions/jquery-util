@@ -24,24 +24,27 @@
 // __license__   = Apache License, Version 2.0
 
 (function(jQuery) {
-
     var types = ["DOMMouseScroll", "mousewheel"];
 
     jQuery.event.special.mousewheel = {
         setup: function() {
-            if (this.addEventListener)
-                for (var i = types.length; i;)
+            if (this.addEventListener) {
+                for (var i = types.length; i;) {
                     this.addEventListener(types[--i], handler, false);
-            else
+                }
+            } else {
                 this.onmousewheel = handler;
+            }
         },
 
         teardown: function() {
-            if (this.removeEventListener)
-                for (var i = types.length; i;)
+            if (this.removeEventListener) {
+                for (var i = types.length; i;) {
                     this.removeEventListener(types[--i], handler, false);
-            else
+                }
+            } else {
                 this.onmousewheel = null;
+            }
         }
     };
 
@@ -56,21 +59,21 @@
     });
 
     function handler(event) {
-        var args = [].slice.call(arguments, 1),
-            delta = 0,
-            returnValue = true;
+        var args = [].slice.call(arguments, 1);
+        var delta = 0;
 
         event = jQuery.event.fix(event || window.event);
         event.type = "mousewheel";
 
-        if (event.wheelDelta)
+        if (event.wheelDelta) {
             delta = event.wheelDelta / 120;
-        if (event.detail)
+        }
+        if (event.detail) {
             delta = -event.detail / 3;
+        }
 
         args.unshift(event, delta);
 
         return jQuery.event.handle.apply(this, args);
     }
-
 })(jQuery);

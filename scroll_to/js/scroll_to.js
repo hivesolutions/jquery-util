@@ -74,7 +74,7 @@
         return this.map(function() {
             // retrieves the reference to the current element/context
             // that is going to be tested for scrollability
-            var element = this
+            var element = this;
 
             // checks if the current element is in fact
             // a window, by checking it's value against a
@@ -167,10 +167,10 @@
             // it retrieves the jquery element, target
             // target offset, attributes and window
             var element = this;
-            var _element = jQuery(element)
+            var _element = jQuery(element);
             var _target = target;
             var targetOffset;
-            var attributes = {}
+            var attributes = {};
             var win = _element.is("html, body");
 
             // switches over the target data type, so that the proper

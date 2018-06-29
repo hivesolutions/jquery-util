@@ -158,7 +158,7 @@ jQuery.extend({
         return function() {
             // returns the state of loading for the url
             return jQuery.includeStates[url];
-        }
+        };
     },
 
     /**

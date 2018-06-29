@@ -29,10 +29,10 @@
         var defaults = {};
 
         // sets the default options value
-        var options = options ? options : {};
+        options = options || {};
 
         // constructs the options
-        var options = jQuery.extend(defaults, options);
+        options = jQuery.extend(defaults, options);
 
         // sets the jquery matched object
         var matchedObject = this;
@@ -44,9 +44,6 @@
             // retrieves the matched object children (only data structure)
             var children = matchedObject.children("[data-structure=true]");
 
-            // retrieves the children length
-            var childrenLength = children.length;
-
             // creates the list of parsed classes
             var parsedClasses = [];
 
@@ -54,7 +51,7 @@
             var contentsMap = {};
 
             // unsets the composite flag
-            var composite = false
+            var composite = false;
 
             // iterates over all the children
             for (var index = 0; index < children.length; index++) {
@@ -87,7 +84,7 @@
                     // or the child is a sequence
                     if (childrenClassLength > 1 || childDataSequence) {
                         // starts the contents map for the child class name
-                        contentsMap[childClassName] = []
+                        contentsMap[childClassName] = [];
 
                         // iterates over all the children class
                         for (var _index = 0; _index < childrenClassLength; _index++) {
@@ -138,15 +135,15 @@
             // should be returned
             else {
                 // returns the html contents of the matched object
-                return matchedObject.html()
+                return matchedObject.html();
             }
-        }
+        };
 
         // parses the matched object, retrieving the
         // result map
-        result_map = parseObject(matchedObject);
+        var resultMap = parseObject(matchedObject);
 
         // returns the result map
-        return result_map;
+        return resultMap;
     };
 })(jQuery);
