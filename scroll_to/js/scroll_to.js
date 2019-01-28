@@ -1,5 +1,5 @@
 // Hive Colony Framework
-// Copyright (c) 2008-2018 Hive Solutions Lda.
+// Copyright (c) 2008-2019 Hive Solutions Lda.
 //
 // This file is part of Hive Colony Framework.
 //
@@ -20,7 +20,7 @@
 // __version__   = 1.0.0
 // __revision__  = $LastChangedRevision$
 // __date__      = $LastChangedDate$
-// __copyright__ = Copyright (c) 2008-2018 Hive Solutions Lda.
+// __copyright__ = Copyright (c) 2008-2019 Hive Solutions Lda.
 // __license__   = Apache License, Version 2.0
 // __credits__   = Ariel Flesler <aflesler@gmail.com>
 
@@ -32,7 +32,7 @@
  * @author João Magalhães <joamag@hive.pt>
  * @version 1.0
  * @category jQuery plugin
- * @copyright Copyright (c) 2008-2018 Hive Solutions Lda.
+ * @copyright Copyright (c) 2008-2019 Hive Solutions Lda.
  * @license Apache License, Version 2.0 - http://www.apache.org/licenses/
  * @credits Ariel Flesler <aflesler@gmail.com>
  */
