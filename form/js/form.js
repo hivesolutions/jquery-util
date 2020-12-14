@@ -50,7 +50,7 @@
         var url = jQuery.trim(action);
 
         // in case the url is defined, cleans the url
-        // (don't include hash vaue)
+        // (don't include hash value)
         if (url) {
             url = (url.match(/^([^#]+)/) || [])[1];
         }
